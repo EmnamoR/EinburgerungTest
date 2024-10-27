@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { Card } from './Card';
 import { colors } from '../constants/Colors';
-import { Question, Answer } from '../types/question';
+import { useBookmarks } from '../context/BookmarkContext';
+import { useLanguage } from '../context/LanguageContext';
+import { Question } from '../types/question';
 
 interface QuestionCardProps {
   question: Question;
@@ -17,6 +20,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onSelectAnswer,
   showResult = false,
 }) => {
+  const { isBookmarked, toggleBookmark } = useBookmarks();
+  const { selectedLanguage } = useLanguage();
+
   const getAnswerStyle = (answerId: number) => {
     if (!showResult) {
       return answerId === selectedAnswer ? styles.selectedAnswer : styles.answer;
@@ -48,25 +54,49 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   return (
     <Card>
-      <Text style={styles.question}>{question.questionDe}</Text>
-      {question.questionEn && (
-        <Text style={styles.translation}>{question.questionEn}</Text>
-      )}
-      
+      {/* Question header with bookmark */}
+      <View style={styles.questionHeader}>
+        <View style={styles.questionSection}>
+          <Text style={styles.question}>{question.question.de}</Text>
+          {selectedLanguage && selectedLanguage !== 'de' && question.question[selectedLanguage] && (
+            <Text style={styles.translationText}>
+              {question.question[selectedLanguage]}
+            </Text>
+          )}
+        </View>
+        <TouchableOpacity 
+          style={styles.bookmarkButton}
+          onPress={() => toggleBookmark(question.id)}
+        >
+          <Feather 
+            name="star" 
+            size={24} 
+            color={isBookmarked(question.id) ? colors.accent : colors.text.secondary}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Answers */}
       <View style={styles.answersContainer}>
         {question.answers.map((answer) => (
           <TouchableOpacity
             key={answer.id}
-            style={[styles.answerButton, getAnswerStyle(answer.id)]}
+            style={[
+              styles.answerButton,
+              getAnswerStyle(answer.id)
+            ]}
             onPress={() => onSelectAnswer(answer.id)}
             disabled={showResult}
           >
-            <Text style={getAnswerTextStyle(answer.id)}>
-              {answer.textDe}
+            <Text style={[
+              styles.answerText,
+              getAnswerTextStyle(answer.id)
+            ]}>
+              {answer.text.de}
             </Text>
-            {answer.textEn && (
+            {selectedLanguage && selectedLanguage !== 'de' && answer.text[selectedLanguage] && (
               <Text style={styles.answerTranslation}>
-                {answer.textEn}
+                {answer.text[selectedLanguage]}
               </Text>
             )}
           </TouchableOpacity>
@@ -77,27 +107,42 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+  questionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 14,
+  },
+  questionSection: {
+    flex: 1,
+    marginRight: 16,
+  },
   question: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
     color: colors.text.primary,
-    marginBottom: 8,
+    marginBottom: 6,
   },
-  translation: {
-    fontSize: 16,
+  translationText: {
+    fontSize: 14,
     color: colors.text.secondary,
-    marginBottom: 16,
+    marginBottom: 6,
     fontStyle: 'italic',
   },
+  bookmarkButton: {
+    padding: 8,
+    marginTop: -8,
+    marginRight: -8,
+  },
   answersContainer: {
-    marginTop: 16,
+    gap: 10,
   },
   answerButton: {
-    marginBottom: 8,
     padding: 16,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.border,
+    backgroundColor: colors.white,
   },
   answer: {
     backgroundColor: colors.white,
@@ -115,22 +160,22 @@ const styles = StyleSheet.create({
     borderColor: colors.error,
   },
   answerText: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.text.primary,
   },
   selectedAnswerText: {
-    fontSize: 16,
     color: colors.accent,
     fontWeight: '500',
   },
   highlightedAnswerText: {
-    fontSize: 16,
-    color: colors.white,
+    color: colors.text.primary,
     fontWeight: '500',
   },
   answerTranslation: {
-    fontSize: 14,
+    fontSize: 12,
     color: colors.text.secondary,
-    marginTop: 4,
+    marginTop: 2,
   },
 });
+
+export default QuestionCard;

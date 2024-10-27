@@ -1,5 +1,5 @@
 // src/screens/PracticeModeScreen.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -8,16 +8,22 @@ import {
   SafeAreaView, 
   Modal,
   ScrollView,
-  Dimensions,
-  FlatList,
+  Image,
+  ActivityIndicator
 } from 'react-native';
-import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
-import { Feather } from '@expo/vector-icons';
+import { GestureHandlerRootView, Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { colors } from '../constants/Colors';
 import { useLanguage } from '../context/LanguageContext';
+import { useBookmarks } from '../context/BookmarkContext';
 import { questions } from '../data/questions';
+import { RootStackParamList } from '../types/navigation';
 
+type PracticeModeRouteProp = RouteProp<RootStackParamList, 'PracticeMode'>;
+
+
+// Language options
 const languages = [
   { code: 'en', name: 'English' },
   { code: 'ar', name: 'العربية' },
@@ -28,185 +34,191 @@ const languages = [
   { code: 'fa', name: 'فارسی' },
 ];
 
-const { width } = Dimensions.get('window');
 
+// Image handling component
+const QuestionImage = ({ source }: { source: any }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
-const PaginationBar = ({ 
-    currentIndex, 
-    totalQuestions, 
-    onSelectQuestion 
-  }: { 
-    currentIndex: number;
-    totalQuestions: number;
-    onSelectQuestion: (index: number) => void;
-  }) => {
-    const centerIndex = Math.min(
-      Math.max(2, currentIndex),
-      totalQuestions - 3
-    );
-    const pages = Array.from(
-      { length: 5 },
-      (_, i) => centerIndex + i - 2
-    ).filter(page => page >= 0 && page < totalQuestions);
-  
-    return (
-      <View style={styles.paginationContainer}>
-        <TouchableOpacity 
-          style={styles.paginationArrow}
-          onPress={() => onSelectQuestion(Math.max(0, currentIndex - 1))}
-          disabled={currentIndex === 0}
-        >
-          <Feather 
-            name="chevron-left" 
-            size={24} 
-            color={currentIndex === 0 ? colors.text.secondary : colors.accent} 
-          />
-        </TouchableOpacity>
-  
-        <View style={styles.paginationNumbers}>
-          {pages.map(pageNum => (
-            <TouchableOpacity
-              key={pageNum}
-              style={[
-                styles.paginationButton,
-                currentIndex === pageNum && styles.paginationButtonActive
-              ]}
-              onPress={() => onSelectQuestion(pageNum)}
-            >
-              <Text style={[
-                styles.paginationButtonText,
-                currentIndex === pageNum && styles.paginationButtonTextActive
-              ]}>
-                {pageNum + 1}
-              </Text>
-            </TouchableOpacity>
-          ))}
+  return (
+    <View style={styles.imageContainer}>
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator color={colors.accent} />
         </View>
-  
-        <TouchableOpacity 
-          style={styles.paginationArrow}
-          onPress={() => onSelectQuestion(Math.min(totalQuestions - 1, currentIndex + 1))}
-          disabled={currentIndex === totalQuestions - 1}
-        >
-          <Feather 
-            name="chevron-right" 
-            size={24} 
-            color={currentIndex === totalQuestions - 1 ? colors.text.secondary : colors.accent} 
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  const PracticeModeScreen = () => {
-    const navigation = useNavigation();
-    const { selectedLanguage, setLanguage } = useLanguage();
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [showLanguageModal, setShowLanguageModal] = useState(false);
-    const [showAnswer, setShowAnswer] = useState(false);
-    const swipeableRef = useRef<Swipeable>(null);
-  
-    const currentQuestion = questions[currentQuestionIndex];
-    const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-  
-    const handleQuestionChange = (index: number) => {
-      setCurrentQuestionIndex(index);
-      setSelectedAnswer(null);
-      setShowAnswer(false);
-      swipeableRef.current?.close();
-    };
-  
-    const handleAnswerSelect = (answerId: number) => {
-      setSelectedAnswer(answerId);
-      setShowAnswer(true);
-    };
-  
-    const handleNextQuestion = () => {
-      if (currentQuestionIndex < questions.length - 1) {
+      )}
+      <Image
+        source={source}
+        style={styles.questionImage}
+        resizeMode="contain"
+        onLoadStart={() => setIsLoading(true)}
+        onLoadEnd={() => setIsLoading(false)}
+        onError={() => {
+          setHasError(true);
+          setIsLoading(false);
+        }}
+      />
+      {hasError && (
+        <View style={styles.errorContainer}>
+          <Feather name="alert-circle" size={24} color={colors.text.secondary} />
+          <Text style={styles.errorText}>Failed to load image</Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const PracticeModeScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute<PracticeModeRouteProp>();
+  const { selectedLanguage, setLanguage } = useLanguage();
+  const { bookmarkedQuestions, toggleBookmark, isBookmarked } = useBookmarks();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [answeredQuestions, setAnsweredQuestions] = useState<Record<number, number>>({});
+
+  // Find the initial question index if navigating from bookmarks
+  useEffect(() => {
+    const questionId = route.params?.questionId;
+    if (questionId) {
+      const index = questions.findIndex(q => q.id === questionId);
+      if (index !== -1) {
+        setCurrentQuestionIndex(index);
+      }
+    }
+  }, [route.params?.questionId]);
+
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  const panGesture = Gesture.Pan()
+    .onEnd((e) => {
+      if (e.velocityX > 0 && currentQuestionIndex > 0) {
+        handleQuestionChange(currentQuestionIndex - 1);
+      } else if (e.velocityX < 0 && currentQuestionIndex < questions.length - 1) {
         handleQuestionChange(currentQuestionIndex + 1);
       }
-    };
-  
-    const closeModal = () => {
-      setShowLanguageModal(false);
-    };
-  
-    const renderSwipeActions = (direction: 'left' | 'right') => {
-      return (
-        <View style={styles.swipeAction}>
-          <Feather 
-            name={direction === 'left' ? 'chevron-left' : 'chevron-right'} 
-            size={24} 
-            color={colors.accent} 
-          />
-        </View>
-      );
-    };
-  
-    return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={styles.container}>
-          {/* Header */}
-          <View style={styles.header}>
-            <TouchableOpacity 
-              style={styles.backButton} 
-              onPress={() => navigation.goBack()}
-            >
-              <Feather name="chevron-left" size={24} color={colors.text.primary} />
-              <Text style={styles.backText}>Home</Text>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Practice Mode</Text>
-            <View style={styles.headerRight} />
-          </View>
-  
-          {/* Progress Bar */}
-          <View style={styles.progressContainer}>
-            <View style={styles.progressBar}>
-              <View style={[styles.progressFill, { width: `${progress}%` }]} />
-            </View>
-            <Text style={styles.progressText}>
-              {currentQuestionIndex + 1} / {questions.length}
-            </Text>
-          </View>
-  
-          {/* Language Selector */}
+    })
+    .activeOffsetX([-20, 20]);
+
+  const handleQuestionChange = (index: number) => {
+    setCurrentQuestionIndex(index);
+    setSelectedAnswer(null);
+    setShowAnswer(false);
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      handleQuestionChange(currentQuestionIndex + 1);
+    }
+  };
+
+
+
+  const getTranslatedText = (text: any) => {
+    if (!text || !selectedLanguage) return '';
+    return text[selectedLanguage] || text.en || text.de;
+  };
+
+  const handleAnswerSelect = (answerId: number) => {
+    setSelectedAnswer(answerId);
+    setShowAnswer(true);
+    setAnsweredQuestions(prev => ({
+      ...prev,
+      [currentQuestionIndex]: answerId,
+    }));
+  };
+
+  const handleBookmarkToggle = () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    toggleBookmark(currentQuestion.id);
+  };  
+
+  const handleResetProgress = () => {
+    setAnsweredQuestions({});
+    setSelectedAnswer(null);
+    setShowAnswer(false);
+  };
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
           <TouchableOpacity 
-            style={styles.languageSelector}
-            onPress={() => setShowLanguageModal(true)}
+            style={styles.backButton} 
+            onPress={() => navigation.goBack()}
           >
-            <Feather name="globe" size={20} color={colors.accent} />
-            <Text style={styles.languageText}>
-              {selectedLanguage?.toUpperCase() || 'EN'}
-            </Text>
+            <Feather name="chevron-left" size={24} color={colors.text.primary} />
+            <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
-  
-          {/* Swipeable Content */}
-          <Swipeable
-            ref={swipeableRef}
-            renderLeftActions={currentQuestionIndex > 0 ? () => renderSwipeActions('left') : undefined}
-            renderRightActions={currentQuestionIndex < questions.length - 1 ? () => renderSwipeActions('right') : undefined}
-            onSwipeableOpen={(direction) => {
-              if (direction === 'left' && currentQuestionIndex > 0) {
-                handleQuestionChange(currentQuestionIndex - 1);
-              } else if (direction === 'right' && currentQuestionIndex < questions.length - 1) {
-                handleQuestionChange(currentQuestionIndex + 1);
-              }
-            }}
-            overshootLeft={false}
-            overshootRight={false}
-          >
+          <Text style={styles.headerTitle}>Practice Mode</Text>
+          <View style={styles.headerRight} />
+        </View>
+
+        {/* Progress Bar */}
+        <View style={styles.progressContainer}>
+          <View style={styles.progressBar}>
+            <View style={[styles.progressFill, { width: `${progress}%` }]} />
+          </View>
+          <Text style={styles.progressText}>
+            {currentQuestionIndex + 1} / {questions.length}
+          </Text>
+        </View>
+
+        {/* Language Selector */}
+        <TouchableOpacity 
+          style={styles.languageSelector}
+          onPress={() => setShowLanguageModal(true)}
+        >
+          <Feather name="globe" size={20} color={colors.accent} />
+          <Text style={styles.languageText}>
+            {selectedLanguage?.toUpperCase() || 'EN'}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Main Content */}
+        <View style={styles.mainContent}>
+          <GestureDetector gesture={panGesture}>
             <ScrollView 
               style={styles.scrollContainer}
               contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
             >
               <View style={styles.questionCard}>
+                <TouchableOpacity 
+                  onPress={handleBookmarkToggle} 
+                  style={styles.bookmarkContainer}
+                >
+                  <Ionicons 
+                    name={currentQuestion && isBookmarked(currentQuestion.id) ? "bookmark" : "bookmark-outline"}
+                    size={24} 
+                    color={colors.accent} 
+                  />
+                </TouchableOpacity>
                 <Text style={styles.questionText}>
                   {currentQuestion.question.de}
                 </Text>
+
+                
                 <Text style={styles.translationText}>
-                  {currentQuestion.question[selectedLanguage || 'en']}
+                  {getTranslatedText(currentQuestion.question)}
                 </Text>
-  
+
+                {/* Image if exists */}
+                {currentQuestion.image && (
+                  <QuestionImage 
+                    source={
+                      typeof currentQuestion.image === 'string' 
+                        ? { uri: currentQuestion.image }
+                        : currentQuestion.image
+                    }
+                  />
+                )}
+
                 <View style={styles.answersContainer}>
                   {currentQuestion.answers.map((answer) => (
                     <TouchableOpacity
@@ -228,12 +240,12 @@ const PaginationBar = ({
                         {answer.text.de}
                       </Text>
                       <Text style={styles.answerTranslation}>
-                        {answer.text[selectedLanguage || 'en']}
+                        {getTranslatedText(answer.text)}
                       </Text>
                     </TouchableOpacity>
                   ))}
                 </View>
-  
+
                 {showAnswer && (
                   <TouchableOpacity 
                     style={styles.nextButton}
@@ -245,62 +257,121 @@ const PaginationBar = ({
                 )}
               </View>
             </ScrollView>
-          </Swipeable>
-  
-          {/* Pagination */}
-          <View style={styles.paginationWrapper}>
-            <PaginationBar
-              currentIndex={currentQuestionIndex}
-              totalQuestions={questions.length}
-              onSelectQuestion={handleQuestionChange}
-            />
-          </View>
-  
-          {/* Language Selection Modal */}
-          <Modal
-            visible={showLanguageModal}
-            transparent={true}
-            animationType="slide"
-            onRequestClose={closeModal}
-          >
+          </GestureDetector>
+        </View>
+
+        {/* Pagination */}
+        <View style={styles.paginationWrapper}>
+          <View style={styles.paginationContainer}>
             <TouchableOpacity 
-              style={styles.modalOverlay} 
-              activeOpacity={1} 
-              onPress={closeModal}
+              style={styles.paginationArrow}
+              onPress={() => handleQuestionChange(Math.max(0, currentQuestionIndex - 1))}
+              disabled={currentQuestionIndex === 0}
             >
-              <View style={styles.modalContent}>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Select Language</Text>
-                  <TouchableOpacity onPress={closeModal}>
-                    <Feather name="x" size={24} color={colors.text.primary} />
-                  </TouchableOpacity>
-                </View>
-                {languages.map((lang) => (
-                  <TouchableOpacity
-                    key={lang.code}
-                    style={[
-                      styles.languageOption,
-                      selectedLanguage === lang.code && styles.selectedLanguageOption
-                    ]}
-                    onPress={() => {
-                      setLanguage(lang.code as any);
-                      closeModal();
-                    }}
-                  >
-                    <Text style={styles.languageOptionText}>{lang.name}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              <Feather 
+                name="chevron-left" 
+                size={24} 
+                color={currentQuestionIndex === 0 ? colors.text.secondary : colors.accent} 
+              />
             </TouchableOpacity>
-          </Modal>
-        </SafeAreaView>
-      </GestureHandlerRootView>
-    );
-  };
-  const styles = StyleSheet.create({
+            
+            <View style={styles.paginationNumbers}>
+              {Array.from({ length: 5 }, (_, i) => {
+                const pageNum = currentQuestionIndex - 2 + i;
+                if (pageNum < 0 || pageNum >= questions.length) return null;
+                return (
+                  <TouchableOpacity
+                    key={pageNum}
+                    style={[
+                      styles.paginationButton,
+                      currentQuestionIndex === pageNum && styles.paginationButtonActive
+                    ]}
+                    onPress={() => handleQuestionChange(pageNum)}
+                  >
+                    <Text style={[
+                      styles.paginationButtonText,
+                      currentQuestionIndex === pageNum && styles.paginationButtonTextActive
+                    ]}>
+                      {pageNum + 1}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+
+            <TouchableOpacity 
+              style={styles.paginationArrow}
+              onPress={() => handleQuestionChange(Math.min(questions.length - 1, currentQuestionIndex + 1))}
+              disabled={currentQuestionIndex === questions.length - 1}
+            >
+              <Feather 
+                name="chevron-right" 
+                size={24} 
+                color={currentQuestionIndex === questions.length - 1 ? colors.text.secondary : colors.accent} 
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Language Selection Modal */}
+        <Modal
+          visible={showLanguageModal}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowLanguageModal(false)}
+        >
+          <TouchableOpacity 
+            style={styles.modalOverlay} 
+            activeOpacity={1} 
+            onPress={() => setShowLanguageModal(false)}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Select Language</Text>
+                <TouchableOpacity onPress={() => setShowLanguageModal(false)}>
+                  <Feather name="x" size={24} color={colors.text.primary} />
+                </TouchableOpacity>
+              </View>
+              {languages.map((lang) => (
+                <TouchableOpacity
+                  key={lang.code}
+                  style={[
+                    styles.languageOption,
+                    selectedLanguage === lang.code && styles.selectedLanguageOption
+                  ]}
+                  onPress={() => {
+                    setLanguage(lang.code as any);
+                    setShowLanguageModal(false);
+                  }}
+                >
+                  <Text style={[
+                    styles.languageOptionText,
+                    selectedLanguage === lang.code && styles.selectedLanguageOptionText
+                  ]}>
+                    {lang.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </SafeAreaView>
+    </GestureHandlerRootView>
+  );
+
+};
+
+
+const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#F5F1EA',
+    },
+    bookmarkContainer: {
+      position: 'absolute',
+      top: 16,
+      right: 16,
+      zIndex: 1,
     },
     header: {
       flexDirection: 'row',
@@ -315,14 +386,14 @@ const PaginationBar = ({
     backButton: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 4,
+      gap: 2,
     },
     backText: {
-      fontSize: 16,
+      fontSize: 14,
       color: colors.text.primary,
     },
     headerTitle: {
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: '600',
       color: colors.text.primary,
     },
@@ -348,7 +419,7 @@ const PaginationBar = ({
       borderRadius: 2,
     },
     progressText: {
-      fontSize: 14,
+      fontSize: 12,
       color: colors.text.secondary,
       minWidth: 50,
       textAlign: 'right',
@@ -356,29 +427,35 @@ const PaginationBar = ({
     languageSelector: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
+      gap: 6,
       padding: 12,
       marginHorizontal: 16,
-      marginTop: 16,
+      marginTop: 14,
       backgroundColor: '#F8F9FA',
       borderRadius: 8,
     },
     languageText: {
-      fontSize: 16,
+      fontSize: 14,
       color: colors.accent,
       fontWeight: '500',
+    },
+    mainContent: {
+      flex: 1,
+      backgroundColor: '#F5F1EA',
     },
     scrollContainer: {
       flex: 1,
     },
     scrollContent: {
-      paddingBottom: 20,
+      flexGrow: 1,
+      padding: 16,
     },
     questionCard: {
-      margin: 16,
-      padding: 20,
+      position: 'relative',
       backgroundColor: 'white',
       borderRadius: 12,
+      padding: 16,
+      marginBottom: 14,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -389,19 +466,55 @@ const PaginationBar = ({
       elevation: 3,
     },
     questionText: {
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: '600',
       color: colors.text.primary,
-      marginBottom: 8,
+      marginBottom: 6,
     },
     translationText: {
-      fontSize: 18,
+      fontSize: 16,
       color: colors.text.secondary,
       marginBottom: 24,
       fontStyle: 'italic',
     },
+    imageContainer: {
+      marginVertical: 16,
+      height: 200,
+      backgroundColor: '#f8f8f8',
+      borderRadius: 8,
+      overflow: 'hidden',
+    },
+    questionImage: {
+      width: '100%',
+      height: '100%',
+    },
+    loadingContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#f8f8f8',
+    },
+    errorContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#f8f8f8',
+    },
+    errorText: {
+      marginTop: 6,
+      color: colors.text.secondary,
+      fontSize: 12,
+    },
     answersContainer: {
-      gap: 12,
+      gap: 10,
     },
     answerButton: {
       padding: 16,
@@ -423,7 +536,7 @@ const PaginationBar = ({
       borderColor: colors.error,
     },
     answerText: {
-      fontSize: 16,
+      fontSize: 14,
       color: colors.text.primary,
       marginBottom: 4,
     },
@@ -432,120 +545,110 @@ const PaginationBar = ({
       fontWeight: '500',
     },
     answerTranslation: {
-      fontSize: 14,
+      fontSize: 12,
       color: colors.text.secondary,
     },
     nextButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: colors.accent,
-        padding: 16,
-        borderRadius: 8,
-        marginTop: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.accent,
+      padding: 16,
+      borderRadius: 8,
+      marginTop: 18,
     },
     nextButtonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: '500',
-        marginRight: 8,
+      color: 'white',
+      fontSize: 14,
+      fontWeight: '500',
+      marginRight: 8,
     },
     paginationWrapper: {
-        backgroundColor: 'white',
-        paddingVertical: 10,
-        borderTopWidth: 1,
-        borderTopColor: colors.border,
+      backgroundColor: 'white',
+      paddingVertical: 10,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
     },
     paginationContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 16,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 16,
     },
     paginationNumbers: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 6,
     },
     paginationButton: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F8F9FA',
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F8F9FA',
     },
     paginationButtonActive: {
-        backgroundColor: colors.accent,
+      backgroundColor: colors.accent,
     },
     paginationButtonText: {
-        fontSize: 14,
-        color: colors.text.primary,
+      fontSize: 12,
+      color: colors.text.primary,
     },
     paginationButtonTextActive: {
-        color: 'white',
-        fontWeight: '500',
+      color: 'white',
+      fontWeight: '500',
     },
     paginationArrow: {
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    swipeAction: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.05)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 60,
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'flex-end',
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'flex-end',
     },
     modalContent: {
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        padding: 20,
-        maxHeight: '80%',
+      backgroundColor: 'white',
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      padding: 20,
+      maxHeight: '80%',
     },
     modalHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20,
-        paddingBottom: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 18,
+      paddingBottom: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
     },
     modalTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: colors.text.primary,
-    },
-    closeButton: {
-        padding: 4,
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text.primary,
     },
     languageOption: {
-        padding: 16,
-        borderRadius: 8,
-        marginBottom: 8,
-        backgroundColor: '#F8F9FA',
+      padding: 16,
+      borderRadius: 8,
+      marginBottom: 6,
+      backgroundColor: '#F8F9FA',
     },
     selectedLanguageOption: {
-        backgroundColor: `${colors.accent}15`,
+      backgroundColor: `${colors.accent}15`,
     },
     languageOptionText: {
-        fontSize: 16,
-        color: colors.text.primary,
+      fontSize: 14,
+      color: colors.text.primary,
     },
     selectedLanguageOptionText: {
-        color: colors.accent,
-        fontWeight: '500',
+      color: colors.accent,
+      fontWeight: '500',
     },
-});
-
-export default PracticeModeScreen;
+  });
+  
+  export default PracticeModeScreen

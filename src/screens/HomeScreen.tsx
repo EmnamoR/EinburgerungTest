@@ -1,112 +1,121 @@
-// src/screens/HomeScreen.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Card, ProgressBar, ActionButton, IconButton } from '../components';
+import { useNavigation } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
 import { colors } from '../constants/Colors';
+import { useBookmarks } from '../context/BookmarkContext';
 import { RootStackParamList } from '../types/navigation';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type HomeScreenProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
-};
+export const HomeScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
+  const { bookmarkedQuestions } = useBookmarks();
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  // These values should come from your progress tracking system
+  const stats = {
+    mastered: 8,
+    remaining: 302,
+    starred: bookmarkedQuestions.length || 2,
+    progress: 3,
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Leben in Deutschland</Text>
-        <View style={styles.headerIcons}>
-          <IconButton 
-            name="globe" 
-            onPress={() => navigation.navigate('Settings')}
-            color={colors.accent}
-          />
-          <IconButton 
-            name="settings" 
-            onPress={() => navigation.navigate('Settings')}
-            color={colors.accent}
-          />
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={() => {}}>
+            <Feather name="globe" size={24} color={colors.accent} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+            <Feather name="settings" size={24} color={colors.accent} />
+          </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.content}>
-        {/* Progress Section */}
-        <Card>
-          <View style={styles.progressHeader}>
-            <View style={styles.progressTitleContainer}>
-              <IconButton name="activity" size={20} color={colors.accent} onPress={() => {}} />
-              <Text style={styles.progressTitle}>Test Readiness</Text>
+        {/* Progress Card */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleContainer}>
+              <Feather name="activity" size={20} color={colors.accent} />
+              <Text style={styles.cardTitle}>Test Readiness</Text>
             </View>
-            <Text style={styles.progressPercentage}>3%</Text>
+            <Text style={styles.progressPercentage}>{stats.progress}%</Text>
           </View>
-          
-          <ProgressBar progress={3} />
-          
+          <View style={styles.progressBar}>
+            <View style={[styles.progressFill, { width: `${stats.progress}%` }]} />
+          </View>
           <View style={styles.statsContainer}>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>8</Text>
+              <Text style={styles.statNumber}>{stats.mastered}</Text>
               <Text style={styles.statLabel}>Mastered</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>302</Text>
+              <Text style={styles.statNumber}>{stats.remaining}</Text>
               <Text style={styles.statLabel}>Remaining</Text>
             </View>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>2</Text>
+              <Text style={styles.statNumber}>{stats.starred}</Text>
               <Text style={styles.statLabel}>Starred</Text>
             </View>
           </View>
-        </Card>
+        </View>
 
-        {/* Main Actions */}
-        <Card>
-          <View style={styles.actionContainer}>
-            <IconButton name="clock" size={24} color={colors.accent} onPress={() => {}} />
-            <View style={styles.actionContent}>
-              <Text style={styles.actionTitle}>Simulate Test</Text>
-              <Text style={styles.actionSubtitle}>
-                33 questions • 60 minutes • 17 correct to pass
-              </Text>
-              <ActionButton 
-                title="Start Test Simulation"
-                onPress={() => navigation.navigate('TestSimulation')}
-              />
-            </View>
+        {/* Test Simulation Card */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Feather name="clock" size={24} color={colors.accent} />
+            <Text style={styles.cardTitle}>Simulate Test</Text>
           </View>
-        </Card>
+          <Text style={styles.cardSubtitle}>
+            33 questions • 60 minutes • 17 correct to pass
+          </Text>
+          <TouchableOpacity 
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate('TestSimulation')}
+          >
+            <Text style={styles.buttonText}>Start Test Simulation</Text>
+          </TouchableOpacity>
+        </View>
 
-        <Card>
-          <View style={styles.actionContainer}>
-            <IconButton name="book" size={24} color={colors.accent} onPress={() => {}} />
-            <View style={styles.actionContent}>
-              <Text style={styles.actionTitle}>Practice Mode</Text>
-              <Text style={styles.actionSubtitle}>
-                Study all 300 questions at your own pace
-              </Text>
-              <ActionButton 
-                title="Start Practice"
-                onPress={() => navigation.navigate('PracticeMode')}
-                variant="outlined"
-              />
-            </View>
+        {/* Practice Mode Card */}
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Feather name="book" size={24} color={colors.accent} />
+            <Text style={styles.cardTitle}>Practice Mode</Text>
           </View>
-        </Card>
+          <Text style={styles.cardSubtitle}>
+            Study all 300 questions at your own pace
+          </Text>
+          <TouchableOpacity 
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate('PracticeMode')}
+          >
+            <Text style={styles.secondaryButtonText}>Start Practice</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Quick Actions */}
         <View style={styles.quickActions}>
-          <Card style={styles.quickActionCard}>
-            <IconButton name="bookmark" size={24} color={colors.accent} onPress={() => {}} />
+          <TouchableOpacity 
+            style={styles.quickActionCard}
+            onPress={() => navigation.navigate('BookmarkedQuestions')}
+          >
+            <Feather name="star" size={24} color={colors.accent} />
             <Text style={styles.quickActionTitle}>Saved Questions</Text>
-            <Text style={styles.quickActionSubtitle}>Quick access</Text>
-          </Card>
-          
-          <Card style={styles.quickActionCard}>
-            <IconButton name="calendar" size={24} color={colors.accent} onPress={() => {}} />
-            <Text style={styles.quickActionTitle}>Historical Dates</Text>
-            <Text style={styles.quickActionSubtitle}>Date questions</Text>
-          </Card>
+            <Text style={styles.quickActionSubtitle}>Review starred items</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.quickActionCard}
+            onPress={() => navigation.navigate('HistoricalDates')}
+          >
+            <Feather name="calendar" size={24} color={colors.accent} />
+            <Text style={styles.quickActionTitle}>Historic Dates</Text>
+            <Text style={styles.quickActionSubtitle}>Important dates</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -123,102 +132,152 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: colors.white,
+    backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '600',
     color: colors.text.primary,
   },
-  headerIcons: {
+  headerActions: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 14,
   },
   content: {
     flex: 1,
     padding: 16,
+    gap: 14,
   },
-  progressHeader: {
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  cardHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    gap: 10,
+    marginBottom: 6,
   },
-  progressTitleContainer: {
+  cardTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
-  progressTitle: {
-    fontSize: 18,
-    fontWeight: '500',
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
     color: colors.text.primary,
   },
+  cardSubtitle: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    marginBottom: 14,
+  },
   progressPercentage: {
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
     color: colors.accent,
+  },
+  progressBar: {
+    height: 4,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 2,
+    marginVertical: 12,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.accent,
+    borderRadius: 2,
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
+    marginTop: 10,
   },
   statBox: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
-    padding: 12,
-    borderRadius: 8,
     alignItems: 'center',
+    backgroundColor: '#F8F9FA',
+    borderRadius: 8,
+    padding: 12,
     marginHorizontal: 4,
   },
   statNumber: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '600',
     color: colors.accent,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    marginTop: 4,
-  },
-  actionContainer: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  actionContent: {
-    flex: 1,
-  },
-  actionTitle: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: colors.text.primary,
     marginBottom: 4,
   },
-  actionSubtitle: {
-    fontSize: 14,
+  statLabel: {
+    fontSize: 10,
     color: colors.text.secondary,
-    marginBottom: 16,
+  },
+  primaryButton: {
+    backgroundColor: colors.accent,
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+  },
+  secondaryButton: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.accent,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  secondaryButtonText: {
+    color: colors.accent,
+    fontSize: 14,
+    fontWeight: '500',
   },
   quickActions: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 14,
   },
   quickActionCard: {
     flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
   quickActionTitle: {
     fontSize: 14,
+    fontWeight: '500',
     color: colors.text.primary,
-    marginTop: 8,
+    marginTop: 6,
+    textAlign: 'center',
   },
   quickActionSubtitle: {
-    fontSize: 12,
+    fontSize: 10,
     color: colors.text.secondary,
-    marginTop: 4,
+    marginTop: 2,
+    textAlign: 'center',
   },
 });
 

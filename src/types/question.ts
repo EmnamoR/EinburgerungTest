@@ -28,6 +28,7 @@ export interface Answer {
 export interface Question {
   id: string;
   question: TranslatedText;
+  image?: string;
   answers: Answer[];
   correctAnswer: number;
   category: string;

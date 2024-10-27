@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { colors } from '../constants/Colors';
 import { Language } from '../types/language';
 
+
 export const LanguageSelector = () => {
   const { selectedLanguage, setLanguage } = useLanguage();
 
@@ -45,15 +46,15 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     color: colors.text.primary,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   languageGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 6,
   },
   languageButton: {
     flexDirection: 'row',
@@ -63,14 +64,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.border,
-    gap: 8,
+    gap: 6,
   },
   selectedLanguage: {
     backgroundColor: colors.accent,
     borderColor: colors.accent,
   },
   languageText: {
-    fontSize: 14,
+    fontSize: 12,
     color: colors.text.primary,
   },
   selectedLanguageText: {
