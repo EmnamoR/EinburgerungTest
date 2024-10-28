@@ -11,6 +11,7 @@ import {
   Image,
   ActivityIndicator
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { Feather, Ionicons } from '@expo/vector-icons';
@@ -77,9 +78,16 @@ const PracticeModeScreen = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [answeredQuestions, setAnsweredQuestions] = useState<Record<number, number>>({});
+  const [answeredQuestions, setAnsweredQuestions] = useState<Record<string, number>>({});
 
-  // Find the initial question index if navigating from bookmarks
+
+  useEffect(() => {
+    loadAnsweredQuestions();
+  }, []);
+
+  useEffect(() => {
+    saveAnsweredQuestions();
+  }, [answeredQuestions]);
   useEffect(() => {
     const questionId = route.params?.questionId;
     if (questionId) {
@@ -90,6 +98,24 @@ const PracticeModeScreen = () => {
     }
   }, [route.params?.questionId]);
 
+  const loadAnsweredQuestions = async () => {
+    try {
+      const savedAnswers = await AsyncStorage.getItem('answeredQuestions');
+      if (savedAnswers) {
+        setAnsweredQuestions(JSON.parse(savedAnswers));
+      }
+    } catch (error) {
+      console.log('Error loading answered questions:', error);
+    }
+  };
+
+  const saveAnsweredQuestions = async () => {
+    try {
+      await AsyncStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions));
+    } catch (error) {
+      console.log('Error saving answered questions:', error);
+    }
+  };
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -104,7 +130,12 @@ const PracticeModeScreen = () => {
     })
     .activeOffsetX([-20, 20]);
 
-  const handleQuestionChange = (index: number) => {
+  
+
+    
+  
+    
+    const handleQuestionChange = (index: number) => {
     setCurrentQuestionIndex(index);
     setSelectedAnswer(null);
     setShowAnswer(false);
@@ -112,7 +143,8 @@ const PracticeModeScreen = () => {
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
-      handleQuestionChange(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+      setSelectedAnswer(null);
     }
   };
 
@@ -125,17 +157,20 @@ const PracticeModeScreen = () => {
 
   const handleAnswerSelect = (answerId: number) => {
     setSelectedAnswer(answerId);
-    setShowAnswer(true);
-    setAnsweredQuestions(prev => ({
-      ...prev,
-      [currentQuestionIndex]: answerId,
+    setAnsweredQuestions(prevState => ({
+      ...prevState,
+      [currentQuestion.id]: answerId,
     }));
   };
 
   const handleBookmarkToggle = () => {
     const currentQuestion = questions[currentQuestionIndex];
     toggleBookmark(currentQuestion.id);
-  };  
+  };
+
+  const isAnswerCorrect = (answerId: number) => {
+    return answerId === currentQuestion.correctAnswer;
+  };
 
   const handleResetProgress = () => {
     setAnsweredQuestions({});
@@ -225,17 +260,16 @@ const PracticeModeScreen = () => {
                       key={answer.id}
                       style={[
                         styles.answerButton,
-                        selectedAnswer === answer.id && styles.selectedAnswer,
-                        showAnswer && answer.id === currentQuestion.correctAnswer && styles.correctAnswer,
-                        showAnswer && selectedAnswer === answer.id && 
-                        selectedAnswer !== currentQuestion.correctAnswer && styles.wrongAnswer
+                        answeredQuestions[currentQuestion.id] === answer.id && styles.selectedAnswer,
+                        answeredQuestions[currentQuestion.id] === answer.id && isAnswerCorrect(answer.id) && styles.correctAnswer,
+                        answeredQuestions[currentQuestion.id] === answer.id && !isAnswerCorrect(answer.id) && styles.wrongAnswer,
                       ]}
                       onPress={() => handleAnswerSelect(answer.id)}
-                      disabled={showAnswer}
+                      disabled={answeredQuestions[currentQuestion.id] !== undefined}
                     >
                       <Text style={[
                         styles.answerText,
-                        selectedAnswer === answer.id && styles.selectedAnswerText
+                        answeredQuestions[currentQuestion.id] === answer.id && styles.selectedAnswerText,
                       ]}>
                         {answer.text.de}
                       </Text>
@@ -246,7 +280,7 @@ const PracticeModeScreen = () => {
                   ))}
                 </View>
 
-                {showAnswer && (
+                {answeredQuestions[currentQuestion.id] !== undefined && (
                   <TouchableOpacity 
                     style={styles.nextButton}
                     onPress={handleNextQuestion}
