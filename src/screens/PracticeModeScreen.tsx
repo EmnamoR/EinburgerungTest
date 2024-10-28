@@ -129,11 +129,6 @@ const PracticeModeScreen = () => {
       }
     })
     .activeOffsetX([-20, 20]);
-
-  
-
-    
-  
     
     const handleQuestionChange = (index: number) => {
     setCurrentQuestionIndex(index);
@@ -147,8 +142,6 @@ const PracticeModeScreen = () => {
       setSelectedAnswer(null);
     }
   };
-
-
 
   const getTranslatedText = (text: any) => {
     if (!text || !selectedLanguage) return '';
@@ -174,8 +167,9 @@ const PracticeModeScreen = () => {
 
   const handleResetProgress = () => {
     setAnsweredQuestions({});
+    setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
-    setShowAnswer(false);
+    AsyncStorage.removeItem('answeredQuestions');
   };
 
   return (
@@ -234,6 +228,13 @@ const PracticeModeScreen = () => {
                     color={colors.accent} 
                   />
                 </TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={handleResetProgress} 
+                    style={styles.resetButton}
+                  >
+                    <Feather name="refresh-cw" size={20} color={colors.accent} />
+                    <Text style={styles.resetButtonText}>Reset</Text>
+                  </TouchableOpacity>
                 <Text style={styles.questionText}>
                   {currentQuestion.question.de}
                 </Text>
@@ -682,6 +683,21 @@ const styles = StyleSheet.create({
     selectedLanguageOptionText: {
       color: colors.accent,
       fontWeight: '500',
+    },
+    questionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    resetButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    resetButtonText: {
+      marginLeft: 4,
+      fontSize: 14,
+      color: colors.accent,
     },
   });
   
