@@ -18,7 +18,9 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { colors } from '../constants/Colors';
 import { useLanguage } from '../context/LanguageContext';
 import { useBookmarks } from '../context/BookmarkContext';
-import { questions } from '../data/questions';
+// import { questions } from '../data/questions';
+import { questions as originalQuestions } from '../data/questions';
+
 import { RootStackParamList } from '../types/navigation';
 
 type PracticeModeRouteProp = RouteProp<RootStackParamList, 'PracticeMode'>;
@@ -68,12 +70,22 @@ const QuestionImage = ({ source }: { source: any }) => {
     </View>
   );
 };
+const shuffleArray = (array: any[]) => {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
 
 const PracticeModeScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<PracticeModeRouteProp>();
   const { selectedLanguage, setLanguage } = useLanguage();
   const { bookmarkedQuestions, toggleBookmark, isBookmarked } = useBookmarks();
+  const [questions, setQuestions] = useState(originalQuestions);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
@@ -172,6 +184,16 @@ const PracticeModeScreen = () => {
     AsyncStorage.removeItem('answeredQuestions');
   };
 
+  const handleShuffleQuestions = () => {
+    const shuffledQuestions = shuffleArray(originalQuestions);
+    setQuestions(shuffledQuestions);
+    setCurrentQuestionIndex(0);
+    setAnsweredQuestions({});
+    setSelectedAnswer(null);
+    AsyncStorage.removeItem('answeredQuestions');
+  };
+
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
@@ -218,23 +240,32 @@ const PracticeModeScreen = () => {
               showsVerticalScrollIndicator={false}
             >
               <View style={styles.questionCard}>
-                <TouchableOpacity 
-                  onPress={handleBookmarkToggle} 
-                  style={styles.bookmarkContainer}
-                >
-                  <Ionicons 
-                    name={currentQuestion && isBookmarked(currentQuestion.id) ? "bookmark" : "bookmark-outline"}
-                    size={24} 
-                    color={colors.accent} 
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    onPress={handleResetProgress} 
-                    style={styles.resetButton}
-                  >
-                    <Feather name="refresh-cw" size={20} color={colors.accent} />
-                    <Text style={styles.resetButtonText}>Reset</Text>
-                  </TouchableOpacity>
+              <View style={styles.questionHeader}>
+                  <View style={styles.questionHeaderButtons}>
+                    <TouchableOpacity 
+                      onPress={handleBookmarkToggle} 
+                      style={styles.headerButton}
+                    >
+                      <Ionicons 
+                        name={currentQuestion && isBookmarked(currentQuestion.id) ? "bookmark" : "bookmark-outline"}
+                        size={24} 
+                        color={colors.accent} 
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      onPress={handleResetProgress} 
+                      style={styles.headerButton}
+                    >
+                      <Feather name="refresh-cw" size={20} color={colors.accent} />
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      onPress={handleShuffleQuestions} 
+                      style={styles.headerButton}
+                    >
+                      <Feather name="shuffle" size={20} color={colors.accent} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 <Text style={styles.questionText}>
                   {currentQuestion.question.de}
                 </Text>
@@ -686,7 +717,7 @@ const styles = StyleSheet.create({
     },
     questionHeader: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
       alignItems: 'center',
       marginBottom: 16,
     },
@@ -698,6 +729,12 @@ const styles = StyleSheet.create({
       marginLeft: 4,
       fontSize: 14,
       color: colors.accent,
+    },
+    questionHeaderButtons: {
+      flexDirection: 'row',
+    },
+    headerButton: {
+      marginLeft: 12,
     },
   });
   

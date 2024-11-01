@@ -32,4 +32,5 @@ export interface Question {
   answers: Answer[];
   correctAnswer: number;
   category: string;
+  federalState?: string;
 }

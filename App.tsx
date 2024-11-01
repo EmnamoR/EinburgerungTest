@@ -8,6 +8,7 @@ import { BookmarkProvider } from './src/context/BookmarkContext';
 import HomeScreen from './src/screens/HomeScreen';
 import { BookmarkedQuestionsScreen } from './src/screens/BookmarkedQuestionsScreen';
 import PracticeModeScreen from './src/screens/PracticeModeScreen';
+import TestSimulationScreen from './src/screens/TestSimulationScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -23,6 +24,11 @@ export default function App() {
               <Stack.Screen 
                 name="Home" 
                 component={HomeScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name="TestSimulation" 
+                component={TestSimulationScreen}
                 options={{ headerShown: false }}
               />
               <Stack.Screen 
