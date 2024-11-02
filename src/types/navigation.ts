@@ -1,4 +1,7 @@
+// src/types/navigation.ts
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TestState } from './test';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -11,13 +14,16 @@ export type RootStackParamList = {
   QuestionDetail: { questionId: string };
   StateSelection: undefined;
   LanguageSelection: undefined;
-
+  Results: { testState: TestState };
 };
 
-// export type ScreenProps = {
-//   navigation: any; // We'll properly type this in each screen
-// };
-
-
-
+// Specific screen navigation types
 export type SettingsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
+export type TestSimulationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'TestSimulation'>;
+export type ResultsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Results'>;
+export type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+export type PracticeModeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PracticeMode'>;
+export type BookmarkedQuestionsScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'BookmarkedQuestions'>;
+export type QuestionDetailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'QuestionDetail'>;
+export type StateSelectionScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'StateSelection'>;
+export type LanguageSelectionScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'LanguageSelection'>;

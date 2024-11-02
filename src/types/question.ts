@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 // src/types/question.ts
 export type Language = 
   | 'de'
@@ -28,7 +30,7 @@ export interface Answer {
 export interface Question {
   id: string;
   question: TranslatedText;
-  image?: string;
+  image?: ImageSourcePropType;
   answers: Answer[];
   correctAnswer: number;
   category: string;

@@ -1,4 +1,5 @@
 // src/data/questions.ts
+import { ImageSourcePropType } from 'react-native';
 import { Question } from '../types/question';
 
 export const questions: Question[] = [
@@ -3748,7 +3749,7 @@ export const questions: Question[] = [
             "pl": "Co przedstawia ten obraz? Budynek z dwoma wieżami po prawej i lewej stronie fasady oraz szklaną kopułą pośrodku dachu.",
             "fa": "این تصویر چه چیزی را نشان می‌دهد؟ ساختمانی با دو برج در سمت چپ و راست نمای اصلی و یک گنبد شیشه‌ای در وسط سقف."
         },
-        image: require('../assets/images/055.png'),
+        image: require('../assets/images/055.png') ,
         "answers": [
             {
                 "id": 0,
@@ -21235,6 +21236,220 @@ export const questions: Question[] = [
     ],
     correctAnswer: 0,
     category: 'geography'
+},
+{
+    "id": "321",
+    "question": {
+        "de": "Welches Wappen gehört zum Bundesland Berlin?",
+        "en": "Which coat of arms belongs to the federal state of Berlin?",
+        "ar": "أي شعار ينتمي إلى ولاية برلين؟",
+        "tr": "Hangi arma Berlin eyaletine aittir?",
+        "uk": "Який герб належить федеральній землі Берлін?",
+        "ru": "Какой герб принадлежит федеральной земле Берлин?",
+        "pl": "Który herb należy do kraju związkowego Berlin?",
+        "fa": "کدام نشان به ایالت فدرال برلین تعلق دارد؟"
+    },
+    "answers": [
+        {
+            "id": 0,
+            "text": {
+                "de": "1",
+                "en": "1",
+                "ar": "1",
+                "tr": "1",
+                "uk": "1",
+                "ru": "1",
+                "pl": "1",
+                "fa": "1"
+            }
+        },
+        {
+            "id": 1,
+            "text": {
+                "de": "2",
+                "en": "2",
+                "ar": "2",
+                "tr": "2",
+                "uk": "2",
+                "ru": "2",
+                "pl": "2",
+                "fa": "2"
+            }
+        },
+        {
+            "id": 2,
+            "text": {
+                "de": "3",
+                "en": "3",
+                "ar": "3",
+                "tr": "3",
+                "uk": "3",
+                "ru": "3",
+                "pl": "3",
+                "fa": "3"
+            }
+        },
+        {
+            "id": 3,
+            "text": {
+                "de": "4",
+                "en": "4",
+                "ar": "4",
+                "tr": "4",
+                "uk": "4",
+                "ru": "4",
+                "pl": "4",
+                "fa": "4"
+            }
+        }
+    ],
+    "correctAnswer": 3,
+    image: require('../assets/images/321.png'),
+    "category": "federalism",
+    "federalState": "be"
+},
+{
+    "id": "322",
+    "question": {
+        "de": "Welches ist ein Bezirk von Berlin?",
+        "en": "Which is a district of Berlin?",
+        "ar": "أي منطقة هي إحدى مناطق برلين؟",
+        "tr": "Berlin'in bir ilçesi hangisidir?",
+        "uk": "Який район є районом Берліна?",
+        "ru": "Какой район является районом Берлина?",
+        "pl": "Która z dzielnic należy do Berlina?",
+        "fa": "کدام منطقه یکی از مناطق برلین است؟"
+    },
+    "answers": [
+        {
+            "id": 0,
+            "text": {
+                "de": "Altona",
+                "en": "Altona",
+                "ar": "آلتونا",
+                "tr": "Altona",
+                "uk": "Альтона",
+                "ru": "Альтона",
+                "pl": "Altona",
+                "fa": "آلتونا"
+            }
+        },
+        {
+            "id": 1,
+            "text": {
+                "de": "Prignitz",
+                "en": "Prignitz",
+                "ar": "پریگنیتس",
+                "tr": "Prignitz",
+                "uk": "Пригніц",
+                "ru": "Пригниц",
+                "pl": "Prignitz",
+                "fa": "پریگنیتس"
+            }
+        },
+        {
+            "id": 2,
+            "text": {
+                "de": "Pankow",
+                "en": "Pankow",
+                "ar": "پانکو",
+                "tr": "Pankow",
+                "uk": "Панков",
+                "ru": "Панков",
+                "pl": "Pankow",
+                "fa": "پانکو"
+            }
+        },
+        {
+            "id": 3,
+            "text": {
+                "de": "Mecklenburgische Seenplatte",
+                "en": "Mecklenburg Lake District",
+                "ar": "دریاچه‌های مکلنبورگ",
+                "tr": "Mecklenburg Gölleri Bölgesi",
+                "uk": "Мекленбурзькі озера",
+                "ru": "Мекленбургское озерное плато",
+                "pl": "Mecklenburgische Seenplatte",
+                "fa": "دریاچه‌های مکلنبورگ"
+            }
+        }
+    ],
+    "correctAnswer": 2,
+    "category": "federalism",
+    "federalState": "be"
+},
+{
+    "id": "323",
+    "question": {
+        "de": "Für wie viele Jahre wird das Landesparlament in Berlin gewählt?",
+        "en": "For how many years is the state parliament in Berlin elected?",
+        "ar": "لعدة سنوات يتم انتخاب برلمان الولاية في برلين؟",
+        "tr": "Berlin eyalet parlamentosu kaç yıllığına seçilir?",
+        "uk": "На скільки років обирається парламент землі в Берліні?",
+        "ru": "На сколько лет избирается парламент земли в Берлине?",
+        "pl": "Na ile lat wybierany jest parlament landu w Berlinie?",
+        "fa": "پارلمان ایالتی برلین برای چند سال انتخاب می‌شود؟"
+    },
+    "answers": [
+        {
+            "id": 0,
+            "text": {
+                "de": "3",
+                "en": "3",
+                "ar": "٣",
+                "tr": "3",
+                "uk": "3",
+                "ru": "3",
+                "pl": "3",
+                "fa": "۳"
+            }
+        },
+        {
+            "id": 1,
+            "text": {
+                "de": "4",
+                "en": "4",
+                "ar": "٤",
+                "tr": "4",
+                "uk": "4",
+                "ru": "4",
+                "pl": "4",
+                "fa": "۴"
+            }
+        },
+        {
+            "id": 2,
+            "text": {
+                "de": "5",
+                "en": "5",
+                "ar": "٥",
+                "tr": "5",
+                "uk": "5",
+                "ru": "5",
+                "pl": "5",
+                "fa": "۵"
+            }
+        },
+        {
+            "id": 3,
+            "text": {
+                "de": "6",
+                "en": "6",
+                "ar": "٦",
+                "tr": "6",
+                "uk": "6",
+                "ru": "6",
+                "pl": "6",
+                "fa": "۶"
+            }
+        }
+    ],
+    "correctAnswer": 2,
+    "category": "federalism",
+    "federalState": "be"
 }
+
+
+
 
 ];
