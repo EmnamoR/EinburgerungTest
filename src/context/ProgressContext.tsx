@@ -1,14 +1,16 @@
 // src/context/ProgressContext.tsx
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+interface QuestionProgress {
+  isCorrect: boolean;
+  timestamp: string;
+  attempts: number;
+}
+
 interface Progress {
   answeredQuestions: {
-    [questionId: string]: {
-      isCorrect: boolean;
-      timestamp: string;
-    }
+    [questionId: string]: QuestionProgress;
   };
   testResults: any[];
   lastUpdated: string;
@@ -21,6 +23,7 @@ interface ProgressContextType {
   getRemainingCount: () => number;
   getProgress: () => number;
   reloadProgress: () => Promise<void>;
+  hasAnsweredQuestion: (questionId: string) => boolean;
 }
 
 const PROGRESS_KEY = 'testProgress';
@@ -52,15 +55,27 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     loadProgress();
   }, []);
 
+  const hasAnsweredQuestion = (questionId: string) => {
+    return !!progress.answeredQuestions[questionId];
+  };
+
   const updateQuestionProgress = async (questionId: string, isCorrect: boolean) => {
     try {
+      const existingProgress = progress.answeredQuestions[questionId];
+      
+      // If the question was already answered correctly, don't update the progress
+      if (existingProgress?.isCorrect) {
+        return;
+      }
+
       const newProgress = {
         ...progress,
         answeredQuestions: {
           ...progress.answeredQuestions,
           [questionId]: {
             isCorrect,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            attempts: (existingProgress?.attempts || 0) + 1
           }
         },
         lastUpdated: new Date().toISOString()
@@ -92,7 +107,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     getMasteredCount,
     getRemainingCount,
     getProgress,
-    reloadProgress: loadProgress
+    reloadProgress: loadProgress,
+    hasAnsweredQuestion
   };
 
   return (

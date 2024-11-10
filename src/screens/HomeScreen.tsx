@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+// src/screens/HomeScreen.tsx
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '../constants/Colors';
 import { useBookmarks } from '../context/BookmarkContext';
@@ -12,7 +13,7 @@ import { useProgress } from '../context/ProgressContext';
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
   const { bookmarkedQuestions } = useBookmarks();
-  const { getMasteredCount, getRemainingCount, getProgress, progress } = useProgress(); // Add progress here
+  const { getMasteredCount, getRemainingCount, getProgress, reloadProgress } = useProgress();
   
   const [stats, setStats] = useState({
     mastered: 0,
@@ -20,6 +21,25 @@ export const HomeScreen = () => {
     starred: bookmarkedQuestions.length || 0,
     progress: 0,
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const updateStats = async () => {
+        // First reload the progress data
+        await reloadProgress();
+        
+        // Then update the stats
+        setStats({
+          mastered: getMasteredCount(),
+          remaining: getRemainingCount(),
+          starred: bookmarkedQuestions.length,
+          progress: getProgress(),
+        });
+      };
+
+      updateStats();
+    }, [getMasteredCount, getRemainingCount, getProgress, reloadProgress, bookmarkedQuestions.length])
+  );
 
   // Update stats when screen comes into focus and when bookmarks change
   useEffect(() => {
@@ -29,7 +49,7 @@ export const HomeScreen = () => {
 
   useEffect(() => {
     updateStats();
-  }, [progress, bookmarkedQuestions]);
+  }, [reloadProgress, bookmarkedQuestions]);
 
   const updateStats = () => {
     setStats({
