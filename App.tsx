@@ -10,46 +10,49 @@ import { BookmarkedQuestionsScreen } from './src/screens/BookmarkedQuestionsScre
 import PracticeModeScreen from './src/screens/PracticeModeScreen';
 import TestSimulationScreen from './src/screens/TestSimulationScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import { ProgressProvider } from './src/context/ProgressContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <LanguageProvider>
-        <BookmarkProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              
-              <Stack.Screen 
-                name="Home" 
-                component={HomeScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen 
-                name="TestSimulation" 
-                component={TestSimulationScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen 
-                name="PracticeMode" 
-                component={PracticeModeScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen 
-                name="BookmarkedQuestions" 
-                component={BookmarkedQuestionsScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen 
-                name="Settings" 
-                component={SettingsScreen}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </BookmarkProvider>
-      </LanguageProvider>
-    </SafeAreaProvider>
+    <ProgressProvider>
+      <SafeAreaProvider>
+        <LanguageProvider>
+          <BookmarkProvider>
+            <NavigationContainer>
+              <Stack.Navigator>
+                
+                <Stack.Screen 
+                  name="Home" 
+                  component={HomeScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen 
+                  name="TestSimulation" 
+                  component={TestSimulationScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen 
+                  name="PracticeMode" 
+                  component={PracticeModeScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen 
+                  name="BookmarkedQuestions" 
+                  component={BookmarkedQuestionsScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen 
+                  name="Settings" 
+                  component={SettingsScreen}
+                  options={{ headerShown: false }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </BookmarkProvider>
+        </LanguageProvider>
+      </SafeAreaProvider>
+    </ProgressProvider>
   );
 }

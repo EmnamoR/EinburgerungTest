@@ -22,6 +22,10 @@ import { useBookmarks } from '../context/BookmarkContext';
 import { questions as originalQuestions } from '../data/questions';
 
 import { RootStackParamList } from '../types/navigation';
+import { useProgress } from '../context/ProgressContext';
+
+
+const LAST_QUESTION_INDEX_KEY = 'lastQuestionIndex';
 
 type PracticeModeRouteProp = RouteProp<RootStackParamList, 'PracticeMode'>;
 
@@ -159,14 +163,73 @@ const PracticeModeScreen = () => {
     if (!text || !selectedLanguage) return '';
     return text[selectedLanguage] || text.en || text.de;
   };
+  const { updateQuestionProgress } = useProgress(); // Add this inside the component
 
-  const handleAnswerSelect = (answerId: number) => {
+const handleAnswerSelect = async (answerId: number) => {
+  const isCorrect = currentQuestion.correctAnswer === answerId;
+  
+  try {
+    // Only update progress if this answer hasn't been recorded before
+    if (!answeredQuestions[currentQuestion.id]) {
+      await updateQuestionProgress(currentQuestion.id, isCorrect);
+    }
+
+    // Update local state
     setSelectedAnswer(answerId);
-    setAnsweredQuestions(prevState => ({
-      ...prevState,
-      [currentQuestion.id]: answerId,
+    setAnsweredQuestions(prev => ({
+      ...prev,
+      [currentQuestion.id]: answerId
     }));
+
+    // Save to AsyncStorage
+    const updatedAnswers = {
+      ...answeredQuestions,
+      [currentQuestion.id]: answerId,
+    };
+    await AsyncStorage.setItem('answeredQuestions', JSON.stringify(updatedAnswers));
+  } catch (error) {
+    console.error('Error updating progress:', error);
+  }
+};
+
+  const getReadinessLevel = (isCorrect: boolean) => {
+    return isCorrect ? colors.success : colors.error;
   };
+  const renderAnswerButton = (answer: any) => (
+    <TouchableOpacity
+      key={answer.id}
+      style={[
+        styles.answerButton,
+        answeredQuestions[currentQuestion.id] === answer.id && styles.selectedAnswer,
+        answeredQuestions[currentQuestion.id] === answer.id && 
+        isAnswerCorrect(answer.id) && styles.correctAnswer,
+        answeredQuestions[currentQuestion.id] === answer.id && 
+        !isAnswerCorrect(answer.id) && styles.wrongAnswer,
+      ]}
+      onPress={() => handleAnswerSelect(answer.id)}
+      disabled={answeredQuestions[currentQuestion.id] !== undefined}
+    >
+      <View style={styles.answerContent}>
+        <Text style={[
+          styles.answerText,
+          answeredQuestions[currentQuestion.id] === answer.id && 
+          styles.selectedAnswerText
+        ]}>
+          {answer.text.de}
+        </Text>
+        <Text style={styles.answerTranslation}>
+          {getTranslatedText(answer.text)}
+        </Text>
+      </View>
+      {answeredQuestions[currentQuestion.id] === answer.id && (
+        <Feather 
+          name={isAnswerCorrect(answer.id) ? "check-circle" : "x-circle"} 
+          size={20} 
+          color={getReadinessLevel(isAnswerCorrect(answer.id))} 
+        />
+      )}
+    </TouchableOpacity>
+  );
 
   const handleBookmarkToggle = () => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -287,30 +350,8 @@ const PracticeModeScreen = () => {
                 )}
 
                 <View style={styles.answersContainer}>
-                  {currentQuestion.answers.map((answer) => (
-                    <TouchableOpacity
-                      key={answer.id}
-                      style={[
-                        styles.answerButton,
-                        answeredQuestions[currentQuestion.id] === answer.id && styles.selectedAnswer,
-                        answeredQuestions[currentQuestion.id] === answer.id && isAnswerCorrect(answer.id) && styles.correctAnswer,
-                        answeredQuestions[currentQuestion.id] === answer.id && !isAnswerCorrect(answer.id) && styles.wrongAnswer,
-                      ]}
-                      onPress={() => handleAnswerSelect(answer.id)}
-                      disabled={answeredQuestions[currentQuestion.id] !== undefined}
-                    >
-                      <Text style={[
-                        styles.answerText,
-                        answeredQuestions[currentQuestion.id] === answer.id && styles.selectedAnswerText,
-                      ]}>
-                        {answer.text.de}
-                      </Text>
-                      <Text style={styles.answerTranslation}>
-                        {getTranslatedText(answer.text)}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                    {currentQuestion.answers.map(renderAnswerButton)}
+                  </View>
 
                 {answeredQuestions[currentQuestion.id] !== undefined && (
                   <TouchableOpacity 
@@ -735,6 +776,27 @@ const styles = StyleSheet.create({
     },
     headerButton: {
       marginLeft: 12,
+    },
+    answerContent: {
+      flex: 1,
+    },
+    feedbackContainer: {
+      marginTop: 16,
+      padding: 16,
+      borderRadius: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    feedbackCorrect: {
+      backgroundColor: `${colors.success}15`,
+    },
+    feedbackIncorrect: {
+      backgroundColor: `${colors.error}15`,
+    },
+    feedbackText: {
+      fontSize: 14,
+      fontWeight: '500',
     },
   });
   
