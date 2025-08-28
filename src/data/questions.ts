@@ -7932,1524 +7932,1546 @@ export const questions: Question[] = [
         "category": "politics"
     }
     ,
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+    {
+        "id": "115",
+        "question": {
+            "de": "Was bedeutet „aktives Wahlrecht“ in Deutschland?",
+            "en": "What does 'active voting right' mean in Germany?",
+            "ar": "ماذا يعني \"حق الانتخاب النشط\" في ألمانيا؟",
+            "tr": "Almanya'da 'aktif seçme hakkı' ne anlama gelir?",
+            "uk": "Що означає «активне виборче право» в Німеччині?",
+            "ru": "Что означает «активное избирательное право» в Германии?",
+            "pl": "Co oznacza „czynne prawo wyborcze” w Niemczech?",
+            "fa": "«حق رای فعال» در آلمان به چه معناست؟"
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "Man kann gewählt werden.",
+                    "en": "You can be elected.",
+                    "ar": "يمكنك أن تُنتخب.",
+                    "tr": "Seçilebilirsiniz.",
+                    "uk": "Вас можуть обрати.",
+                    "ru": "Вы можете быть избранным.",
+                    "pl": "Możesz zostać wybrany.",
+                    "fa": "می‌توانید انتخاب شوید."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "Man muss wählen gehen.",
+                    "en": "You must vote.",
+                    "ar": "يجب أن تصوت.",
+                    "tr": "Oy vermek zorundasınız.",
+                    "uk": "Ви повинні голосувати.",
+                    "ru": "Вы обязаны голосовать.",
+                    "pl": "Musisz głosować.",
+                    "fa": "باید رأی بدهید."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "Man kann wählen.",
+                    "en": "You can vote.",
+                    "ar": "يمكنك التصويت.",
+                    "tr": "Oy kullanabilirsiniz.",
+                    "uk": "Ви можете голосувати.",
+                    "ru": "Вы можете голосовать.",
+                    "pl": "Możesz głosować.",
+                    "fa": "می‌توانید رأی بدهید."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "Man muss zur Auszählung der Stimmen gehen.",
+                    "en": "You must go to the vote count.",
+                    "ar": "يجب عليك الذهاب لعد الأصوات.",
+                    "tr": "Oy sayımına gitmelisiniz.",
+                    "uk": "Ви повинні піти на підрахунок голосів.",
+                    "ru": "Вы обязаны присутствовать при подсчете голосов.",
+                    "pl": "Musisz udać się na liczenie głosów.",
+                    "fa": "باید برای شمارش آرا بروید."
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "correctAnswer": 2,
+        "category": "democracy"
+    }
+    ,
+    {
+        "id": "116",
+        "question": {
+            "de": "Wenn Sie bei einer Bundestagswahl in Deutschland wählen dürfen, heißt das …",
+            "en": "If you are allowed to vote in a federal election in Germany, it means …",
+            "ar": "إذا كنت مسموحًا لك بالتصويت في انتخابات برلمانية في ألمانيا، فهذا يعني …",
+            "tr": "Almanya'da bir federal seçimde oy kullanmanıza izin veriliyorsa, bu … anlamına gelir.",
+            "uk": "Якщо вам дозволено голосувати на виборах до Бундестагу в Німеччині, це означає …",
+            "ru": "Если вам разрешено голосовать на выборах в Бундестаг в Германии, это означает …",
+            "pl": "Jeśli możesz głosować w wyborach do Bundestagu w Niemczech, oznacza to …",
+            "fa": "اگر مجاز به رای دادن در انتخابات فدرال آلمان هستید، این به معنای …"
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "aktive Wahlkampagne.",
+                    "en": "active election campaign.",
+                    "ar": "حملة انتخابية نشطة.",
+                    "tr": "aktif seçim kampanyası.",
+                    "uk": "активна виборча кампанія.",
+                    "ru": "активная избирательная кампания.",
+                    "pl": "aktywna kampania wyborcza.",
+                    "fa": "کمپین انتخاباتی فعال."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "aktives Wahlverfahren.",
+                    "en": "active voting process.",
+                    "ar": "إجراءات تصويت نشطة.",
+                    "tr": "aktif oylama süreci.",
+                    "uk": "активний виборчий процес.",
+                    "ru": "активный процесс голосования.",
+                    "pl": "aktywny proces głosowania.",
+                    "fa": "فرآیند رای‌گیری فعال."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "aktiver Wahlkampf.",
+                    "en": "active election campaign.",
+                    "ar": "حملة انتخابية نشطة.",
+                    "tr": "aktif seçim kampanyası.",
+                    "uk": "активна передвиборча кампанія.",
+                    "ru": "активная предвыборная кампания.",
+                    "pl": "aktywna kampania wyborcza.",
+                    "fa": "کمپین انتخاباتی فعال."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "aktives Wahlrecht.",
+                    "en": "active voting right.",
+                    "ar": "حق الانتخاب النشط.",
+                    "tr": "aktif seçme hakkı.",
+                    "uk": "активне виборче право.",
+                    "ru": "активное избирательное право.",
+                    "pl": "czynne prawo wyborcze.",
+                    "fa": "حق رای فعال."
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "correctAnswer": 3,
+        "category": "democracy"
+    },
+    {
+        "id": "117",
+        "question": {
+            "de": "Wie viel Prozent der Zweitstimmen müssen Parteien mindestens bekommen, um in den Deutschen Bundestag gewählt zu werden?",
+            "en": "What percentage of second votes must parties receive at a minimum to be elected to the German Bundestag?",
+            "ar": "كم نسبة الأصوات الثانية التي يجب أن تحصل عليها الأحزاب على الأقل للانتخاب في البوندستاغ الألماني؟",
+            "tr": "Alman Bundestag'ına seçilmek için partilerin en az kaç oy alması gerekir?",
+            "uk": "Скільки відсотків других голосів повинні отримати партії, щоб бути обраними до Німецького Бундестагу?",
+            "ru": "Какой процент вторичных голосов должны получить партии, чтобы быть избранными в Бундестаг Германии?",
+            "pl": "Ile procent głosów drugiego wyboru muszą otrzymać partie, aby zostały wybrane do niemieckiego Bundestagu?",
+            "fa": "احزاب حداقل چند درصد از آراء دوم را برای انتخاب در بوندستاگ آلمان باید به دست آورند؟"
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "3 %",
+                    "en": "3%",
+                    "ar": "3٪",
+                    "tr": "3%",
+                    "uk": "3%",
+                    "ru": "3%",
+                    "pl": "3%",
+                    "fa": "۳٪"
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "4 %",
+                    "en": "4%",
+                    "ar": "4٪",
+                    "tr": "4%",
+                    "uk": "4%",
+                    "ru": "4%",
+                    "pl": "4%",
+                    "fa": "۴٪"
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "5 %",
+                    "en": "5%",
+                    "ar": "5٪",
+                    "tr": "5%",
+                    "uk": "5%",
+                    "ru": "5%",
+                    "pl": "5%",
+                    "fa": "۵٪"
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "6 %",
+                    "en": "6%",
+                    "ar": "6٪",
+                    "tr": "6%",
+                    "uk": "6%",
+                    "ru": "6%",
+                    "pl": "6%",
+                    "fa": "۶٪"
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+      ,
       {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "id": "118",
+        "question": {
+            "de": "Wer darf bei den rund 40 jüdischen Makkabi-Sportvereinen Mitglied werden?",
+            "en": "Who can become a member of the approximately 40 Jewish Makkabi sports clubs?",
+            "ar": "من يمكنه أن يصبح عضوًا في حوالي 40 نادي رياضي يهودي ماكابي؟",
+            "tr": "Yaklaşık 40 Yahudi Makkabi spor kulübüne kim üye olabilir?",
+            "uk": "Хто може стати членом близько 40 єврейських спортивних клубів Маккабі?",
+            "ru": "Кто может стать членом примерно 40 еврейских спортивных клубов Макаби?",
+            "pl": "Kto może zostać członkiem około 40 żydowskich klubów sportowych Makkabi?",
+            "fa": "چه کسانی می‌توانند عضو تقریباً ۴۰ باشگاه ورزشی یهودی مکابی شوند؟"
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "nur Deutsche",
+                    "en": "only Germans",
+                    "ar": "فقط الألمان",
+                    "tr": "sadece Almanlar",
+                    "uk": "тільки німці",
+                    "ru": "только немцы",
+                    "pl": "tylko Niemcy",
+                    "fa": "فقط آلمانی‌ها"
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "nur Israelis",
+                    "en": "only Israelis",
+                    "ar": "فقط الإسرائيليين",
+                    "tr": "sadece İsrailliler",
+                    "uk": "тільки ізраїльтяни",
+                    "ru": "только израильтяне",
+                    "pl": "tylko Izraelczycy",
+                    "fa": "فقط اسرائیلی‌ها"
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "nur religiöse Menschen",
+                    "en": "only religious people",
+                    "ar": "فقط الأشخاص المتدينين",
+                    "tr": "sadece dindar insanlar",
+                    "uk": "тільки релігійні люди",
+                    "ru": "только религиозные люди",
+                    "pl": "tylko osoby religijne",
+                    "fa": "فقط افراد مذهبی"
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "alle Menschen",
+                    "en": "all people",
+                    "ar": "جميع الناس",
+                    "tr": "tüm insanlar",
+                    "uk": "всі люди",
+                    "ru": "все люди",
+                    "pl": "wszyscy ludzie",
+                    "fa": "همه افراد"
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "correctAnswer": 3,
+        "category": "society"
+    }
+    ,
+    {
+        "id": "119",
+        "question": {
+            "de": "Wahlen in Deutschland sind frei. Was bedeutet das?",
+            "en": "Elections in Germany are free. What does this mean?",
+            "ar": "الانتخابات في ألمانيا حرة. ماذا يعني ذلك؟",
+            "tr": "Almanya'da seçimler özgürdür. Bu ne anlama geliyor?",
+            "uk": "Вибори в Німеччині є вільними. Що це означає?",
+            "ru": "Выборы в Германии свободные. Что это значит?",
+            "pl": "Wybory w Niemczech są wolne. Co to oznacza?",
+            "fa": "انتخابات در آلمان آزاد است. این به چه معناست؟"
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "Alle verurteilten Straftäter / Straftäterinnen dürfen nicht wählen.",
+                    "en": "All convicted criminals are not allowed to vote.",
+                    "ar": "جميع المجرمين المدانين غير مسموح لهم بالتصويت.",
+                    "tr": "Mahkum edilmiş tüm suçluların oy kullanmasına izin verilmez.",
+                    "uk": "Усім засудженим злочинцям заборонено голосувати.",
+                    "ru": "Все осужденные преступники не имеют права голосовать.",
+                    "pl": "Wszyscy skazani przestępcy nie mają prawa głosu.",
+                    "fa": "تمام مجرمان محکوم نمی‌توانند رأی دهند."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "Wenn ich wählen gehen möchte, muss mein Arbeitgeber / meine Arbeitgeberin mir frei geben.",
+                    "en": "If I want to vote, my employer must give me time off.",
+                    "ar": "إذا أردت التصويت، يجب على صاحب العمل أن يمنحني وقتًا.",
+                    "tr": "Oy kullanmak istersem, işverenim bana izin vermelidir.",
+                    "uk": "Якщо я хочу голосувати, мій роботодавець повинен надати мені відпустку.",
+                    "ru": "Если я хочу голосовать, мой работодатель обязан дать мне выходной.",
+                    "pl": "Jeśli chcę głosować, mój pracodawca musi dać mi czas wolny.",
+                    "fa": "اگر بخواهم رأی بدهم، کارفرما باید به من مرخصی بدهد."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "Jede Person kann ohne Zwang entscheiden, ob sie wählen möchte und wen sie wählen möchte.",
+                    "en": "Every person can decide without coercion whether they want to vote and for whom.",
+                    "ar": "يمكن لكل شخص أن يقرر بدون إكراه ما إذا كان يريد التصويت ولمن.",
+                    "tr": "Her kişi zorlamadan oy kullanmak isteyip istemediğine ve kime oy vereceğine karar verebilir.",
+                    "uk": "Кожна людина може вирішити без примусу, чи хоче вона голосувати і за кого.",
+                    "ru": "Каждый человек может без принуждения решить, хочет ли он голосовать и за кого.",
+                    "pl": "Każda osoba może bez przymusu zdecydować, czy chce głosować i na kogo.",
+                    "fa": "هر فردی می‌تواند بدون اجبار تصمیم بگیرد که آیا می‌خواهد رأی دهد و به چه کسی."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "Ich kann frei entscheiden, wo ich wählen gehen möchte.",
+                    "en": "I can freely decide where I want to vote.",
+                    "ar": "يمكنني أن أقرر بحرية أين أريد التصويت.",
+                    "tr": "Nerede oy kullanmak istediğime özgürce karar verebilirim.",
+                    "uk": "Я можу вільно вирішувати, де хочу голосувати.",
+                    "ru": "Я могу свободно решать, где я хочу голосовать.",
+                    "pl": "Mogę swobodnie decydować, gdzie chcę głosować.",
+                    "fa": "می‌توانم آزادانه تصمیم بگیرم کجا رأی دهم."
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "120",
+        "question": {
+            "de": "Das Wahlsystem in Deutschland ist ein …",
+            "en": "The electoral system in Germany is a …",
+            "ar": "نظام الانتخابات في ألمانيا هو ...",
+            "tr": "Almanya'daki seçim sistemi bir ...",
+            "uk": "Виборча система в Німеччині - це …",
+            "ru": "Избирательная система в Германии - это …",
+            "pl": "System wyborczy w Niemczech to …",
+            "fa": "سیستم انتخاباتی در آلمان یک ..."
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "Zensuswahlrecht.",
+                    "en": "Census suffrage.",
+                    "ar": "حق الاقتراع القائم على التعداد.",
+                    "tr": "Sayım esaslı seçim hakkı.",
+                    "uk": "Цензітне виборче право.",
+                    "ru": "Цензовое избирательное право.",
+                    "pl": "Cenzus wyborczy.",
+                    "fa": "حق رأی مبتنی بر سرشماری."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "Dreiklassenwahlrecht.",
+                    "en": "Three-class suffrage.",
+                    "ar": "حق الاقتراع على أساس الطبقات الثلاث.",
+                    "tr": "Üç sınıf seçim hakkı.",
+                    "uk": "Трикласне виборче право.",
+                    "ru": "Трёхклассовое избирательное право.",
+                    "pl": "Trójklasowy system wyborczy.",
+                    "fa": "حق رأی سه طبقه‌ای."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "Mehrheits- und Verhältniswahlrecht.",
+                    "en": "Majority and proportional representation.",
+                    "ar": "التمثيل بالأغلبية والنسبية.",
+                    "tr": "Çoğunluk ve orantılı temsil.",
+                    "uk": "Мажоритарне та пропорційне представництво.",
+                    "ru": "Мажоритарное и пропорциональное представительство.",
+                    "pl": "Większościowy i proporcjonalny system wyborczy.",
+                    "fa": "نمایندگی اکثریتی و نسبی."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "allgemeines Männerwahlrecht.",
+                    "en": "General male suffrage.",
+                    "ar": "حق التصويت العام للرجال.",
+                    "tr": "Genel erkek seçim hakkı.",
+                    "uk": "Загальне чоловіче виборче право.",
+                    "ru": "Общее мужское избирательное право.",
+                    "pl": "Powszechne prawo wyborcze dla mężczyzn.",
+                    "fa": "حق رأی عمومی برای مردان."
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "121",
+        "question": {
+            "de": "Eine Partei möchte in den Deutschen Bundestag. Sie muss aber einen Mindestanteil an Wählerstimmen haben. Das heißt …",
+            "en": "A party wants to enter the German Bundestag. However, it must have a minimum share of votes. This is called …",
+            "ar": "حزب يريد دخول البوندستاغ الألماني. ولكن يجب أن يحصل على حد أدنى من الأصوات. وهذا يسمى ...",
+            "tr": "Bir parti Alman Bundestag'ına girmek istiyor. Ancak minimum bir oy oranına sahip olmalıdır. Buna ... denir.",
+            "uk": "Партія хоче потрапити до Німецького Бундестагу. Проте їй потрібно отримати мінімальну частку голосів. Це називається …",
+            "ru": "Партия хочет войти в Бундестаг Германии. Однако она должна набрать минимальный процент голосов. Это называется …",
+            "pl": "Partia chce wejść do niemieckiego Bundestagu. Musi jednak uzyskać minimalny udział głosów. To nazywa się …",
+            "fa": "حزبی می‌خواهد وارد بوندستاگ آلمان شود. با این حال، باید حداقل سهمی از آرا داشته باشد. این به نام ..."
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "5 %-Hürde.",
+                    "en": "5% threshold.",
+                    "ar": "عتبة 5٪.",
+                    "tr": "5% barajı.",
+                    "uk": "5%-й бар'єр.",
+                    "ru": "5%-й барьер.",
+                    "pl": "Próg 5%.",
+                    "fa": "آستانه ۵٪."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 1,
+                "text": {
+                    "de": "Zulassungsgrenze.",
+                    "en": "Admission limit.",
+                    "ar": "حد القبول.",
+                    "tr": "Kabul sınırı.",
+                    "uk": "Ліміт на допуск.",
+                    "ru": "Порог допуска.",
+                    "pl": "Limit dopuszczenia.",
+                    "fa": "حد مجاز پذیرش."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
-        ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
-            {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 2,
+                "text": {
+                    "de": "Basiswert.",
+                    "en": "Base value.",
+                    "ar": "القيمة الأساسية.",
+                    "tr": "Temel değer.",
+                    "uk": "Базова величина.",
+                    "ru": "Базовая величина.",
+                    "pl": "Wartość bazowa.",
+                    "fa": "مقدار پایه."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 3,
+                "text": {
+                    "de": "Richtlinie.",
+                    "en": "Directive.",
+                    "ar": "توجيه.",
+                    "tr": "Yönerge.",
+                    "uk": "Директива.",
+                    "ru": "Директива.",
+                    "pl": "Dyrektywa.",
+                    "fa": "راهنمود."
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
-      {
-        id: '1',
-        question: {
-            de: '',
-            en: '',
-            ar: '',
-            tr: '',
-            uk: '',
-            ru: '',
-            pl: '',
-            fa: '',
-            },
-        answers: [
+        "correctAnswer": 0,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "122",
+        "question": {
+            "de": "Welchem Grundsatz unterliegen Wahlen in Deutschland? Wahlen in Deutschland sind …",
+            "en": "What principle do elections in Germany follow? Elections in Germany are …",
+            "ar": "ما هو المبدأ الذي تخضع له الانتخابات في ألمانيا؟ الانتخابات في ألمانيا هي ...",
+            "tr": "Almanya'daki seçimler hangi ilkeye dayanır? Almanya'daki seçimler ...",
+            "uk": "Якому принципу підпорядковуються вибори в Німеччині? Вибори в Німеччині є …",
+            "ru": "Какому принципу подчиняются выборы в Германии? Выборы в Германии …",
+            "pl": "Jakiej zasadzie podlegają wybory w Niemczech? Wybory w Niemczech są …",
+            "fa": "انتخابات در آلمان از چه اصلی پیروی می‌کند؟ انتخابات در آلمان ..."
+        },
+        "answers": [
             {
-              id: 0,
-              text: {
-                de: '',
-                en: '',
-                ar: '',
-                tr: '',
-                uk: '',
-                ru: '',
-                pl: '',
-                fa: ''
+                "id": 0,
+                "text": {
+                    "de": "frei, gleich, geheim.",
+                    "en": "Free, equal, secret.",
+                    "ar": "حرة، متساوية، وسرية.",
+                    "tr": "Özgür, eşit, gizli.",
+                    "uk": "Вільні, рівні, таємні.",
+                    "ru": "Свободные, равные, тайные.",
+                    "pl": "Wolne, równe, tajne.",
+                    "fa": "آزاد، برابر، محرمانه."
                 }
             },
             {
-                id: 1,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 2,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              },
-              {
-                id: 3,
-                text: {
-                  de: '',
-                  en: '',
-                  ar: '',
-                  tr: '',
-                  uk: '',
-                  ru: '',
-                  pl: '',
-                  fa: ''
-                  }
-              }
+                "id": 1,
+                "text": {
+                    "de": "offen, sicher, frei.",
+                    "en": "Open, safe, free.",
+                    "ar": "مفتوحة، آمنة، وحرة.",
+                    "tr": "Açık, güvenli, özgür.",
+                    "uk": "Відкриті, безпечні, вільні.",
+                    "ru": "Открытые, безопасные, свободные.",
+                    "pl": "Otwarte, bezpieczne, wolne.",
+                    "fa": "باز، امن، آزاد."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "geschlossen, gleich, sicher.",
+                    "en": "Closed, equal, safe.",
+                    "ar": "مغلقة، متساوية، وآمنة.",
+                    "tr": "Kapalı, eşit, güvenli.",
+                    "uk": "Закриті, рівні, безпечні.",
+                    "ru": "Закрытые, равные, безопасные.",
+                    "pl": "Zamknięte, równe, bezpieczne.",
+                    "fa": "بسته، برابر، امن."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "sicher, offen, freiwillig.",
+                    "en": "Safe, open, voluntary.",
+                    "ar": "آمنة، مفتوحة، وطوعية.",
+                    "tr": "Güvenli, açık, gönüllü.",
+                    "uk": "Безпечні, відкриті, добровільні.",
+                    "ru": "Безопасные, открытые, добровольные.",
+                    "pl": "Bezpieczne, otwarte, dobrowolne.",
+                    "fa": "امن، باز، داوطلبانه."
+                }
+            }
         ],
-        correctAnswer: 2,
-        category: ''
-      },
+        "correctAnswer": 0,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "123",
+        "question": {
+            "de": "Was ist in Deutschland die „5 %-Hürde“?",
+            "en": "What is the '5% threshold' in Germany?",
+            "ar": "ما هي \"عتبة 5%\" في ألمانيا؟",
+            "tr": "Almanya'da '5% barajı' nedir?",
+            "uk": "Що таке «5% бар’єр» у Німеччині?",
+            "ru": "Что такое «5%-й барьер» в Германии?",
+            "pl": "Co to jest „próg 5%” w Niemczech?",
+            "fa": "آستانه ۵٪ در آلمان چیست؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "Abstimmungsregelung im Bundestag für kleine Parteien",
+                    "en": "Voting rule in the Bundestag for small parties",
+                    "ar": "قاعدة تصويت في البوندستاغ للأحزاب الصغيرة",
+                    "tr": "Küçük partiler için Bundestag'da oylama kuralı",
+                    "uk": "Правило голосування в Бундестазі для малих партій",
+                    "ru": "Правило голосования в Бундестаге для малых партий",
+                    "pl": "Zasada głosowania w Bundestagu dla małych partii",
+                    "fa": "قانون رأی‌گیری در بوندستاگ برای احزاب کوچک"
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "Anwesenheitskontrolle im Bundestag für Abstimmungen",
+                    "en": "Attendance check in the Bundestag for voting",
+                    "ar": "تحقق الحضور في البوندستاغ للتصويت",
+                    "tr": "Bundestag'da oylama için yoklama kontrolü",
+                    "uk": "Перевірка присутності в Бундестазі для голосування",
+                    "ru": "Контроль присутствия в Бундестаге для голосования",
+                    "pl": "Kontrola obecności w Bundestagu przed głosowaniem",
+                    "fa": "کنترل حضور در بوندستاگ برای رأی‌گیری"
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Mindestanteil an Wählerstimmen, um ins Parlament zu kommen",
+                    "en": "Minimum share of votes to enter Parliament",
+                    "ar": "الحد الأدنى من الأصوات لدخول البرلمان",
+                    "tr": "Parlamentoya girmek için minimum oy oranı",
+                    "uk": "Мінімальна частка голосів для входу в парламент",
+                    "ru": "Минимальный процент голосов для прохождения в парламент",
+                    "pl": "Minimalny udział głosów, aby wejść do parlamentu",
+                    "fa": "حداقل سهم آرا برای ورود به پارلمان"
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Anwesenheitskontrolle im Bundesrat für Abstimmungen",
+                    "en": "Attendance check in the Bundesrat for voting",
+                    "ar": "تحقق الحضور في البوندسرات للتصويت",
+                    "tr": "Bundesrat'ta oylama için yoklama kontrolü",
+                    "uk": "Перевірка присутності в Бундесраті для голосування",
+                    "ru": "Контроль присутствия в Бундесрате для голосования",
+                    "pl": "Kontrola obecności w Bundesracie przed głosowaniem",
+                    "fa": "کنترل حضور در بوندسرات برای رأی‌گیری"
+                }
+            }
+        ],
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "124",
+        "question": {
+            "de": "Die Bundestagswahl in Deutschland ist die Wahl …",
+            "en": "The Bundestag election in Germany is the election of …",
+            "ar": "انتخابات البوندستاغ في ألمانيا هي انتخاب ...",
+            "tr": "Almanya'daki Bundestag seçimi ... seçimi.",
+            "uk": "Вибори до Бундестагу в Німеччині – це вибори …",
+            "ru": "Выборы в Бундестаг в Германии — это выборы …",
+            "pl": "Wybory do Bundestagu w Niemczech to wybory …",
+            "fa": "انتخابات بوندستاگ در آلمان انتخاب ... است."
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "des Bundeskanzlers / der Bundeskanzlerin.",
+                    "en": "of the Federal Chancellor.",
+                    "ar": "للمستشار الاتحادي.",
+                    "tr": "Federal Şansölye'nin.",
+                    "uk": "Федерального канцлера.",
+                    "ru": "Федерального канцлера.",
+                    "pl": "Kanclerza Federalnego.",
+                    "fa": "صدراعظم فدرال."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "der Parlamente der Länder.",
+                    "en": "of the state parliaments.",
+                    "ar": "لبرلمانات الولايات.",
+                    "tr": "Eyalet parlamentolarının.",
+                    "uk": "парламентів земель.",
+                    "ru": "парламентов земель.",
+                    "pl": "parlamentów krajowych.",
+                    "fa": "پارلمان‌های ایالتی."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "des Parlaments für Deutschland.",
+                    "en": "of the Parliament for Germany.",
+                    "ar": "لبرلمان ألمانيا.",
+                    "tr": "Almanya Parlamentosu'nun.",
+                    "uk": "Парламенту Німеччини.",
+                    "ru": "Парламента Германии.",
+                    "pl": "Parlamentu Niemiec.",
+                    "fa": "پارلمان آلمان."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "des Bundespräsidenten / der Bundespräsidentin.",
+                    "en": "of the Federal President.",
+                    "ar": "لرئيس الاتحادي.",
+                    "tr": "Federal Başkan'ın.",
+                    "uk": "Федерального президента.",
+                    "ru": "Федерального президента.",
+                    "pl": "Prezydenta Federalnego.",
+                    "fa": "رئیس‌جمهور فدرال."
+                }
+            }
+        ],
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "125",
+        "question": {
+            "de": "In einer Demokratie ist eine Funktion von regelmäßigen Wahlen, …",
+            "en": "In a democracy, one function of regular elections is to …",
+            "ar": "في الديمقراطية، إحدى وظائف الانتخابات المنتظمة هي ...",
+            "tr": "Bir demokraside düzenli seçimlerin bir işlevi ...",
+            "uk": "У демократії однією з функцій регулярних виборів є …",
+            "ru": "В демократии одна из функций регулярных выборов заключается в …",
+            "pl": "W demokracji jedną z funkcji regularnych wyborów jest …",
+            "fa": "در دموکراسی، یکی از وظایف انتخابات منظم این است که ..."
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "die Bürger und Bürgerinnen zu zwingen, ihre Stimme abzugeben.",
+                    "en": "to force citizens to cast their votes.",
+                    "ar": "إجبار المواطنين على الإدلاء بأصواتهم.",
+                    "tr": "Vatandaşları oy kullanmaya zorlamak.",
+                    "uk": "змусити громадян голосувати.",
+                    "ru": "заставить граждан проголосовать.",
+                    "pl": "zmuszenie obywateli do oddania głosu.",
+                    "fa": "مجبور کردن شهروندان به رأی دادن."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "nach dem Willen der Wählermehrheit den Wechsel der Regierung zu ermöglichen.",
+                    "en": "to enable a change of government according to the will of the majority of voters.",
+                    "ar": "تمكين تغيير الحكومة بناءً على إرادة غالبية الناخبين.",
+                    "tr": "Seçmenlerin çoğunluğunun isteğine göre hükümet değişikliğini sağlamak.",
+                    "uk": "дозволити зміну уряду за волею більшості виборців.",
+                    "ru": "обеспечить смену правительства по воле большинства избирателей.",
+                    "pl": "umożliwienie zmiany rządu zgodnie z wolą większości wyborców.",
+                    "fa": "امکان تغییر دولت بر اساس خواست اکثریت رأی‌دهندگان."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "im Land bestehende Gesetze beizubehalten.",
+                    "en": "to maintain existing laws in the country.",
+                    "ar": "الحفاظ على القوانين القائمة في البلاد.",
+                    "tr": "Ülkedeki mevcut yasaları korumak.",
+                    "uk": "зберегти існуючі закони в країні.",
+                    "ru": "сохранить существующие законы в стране.",
+                    "pl": "utrzymanie istniejących przepisów w kraju.",
+                    "fa": "حفظ قوانین موجود در کشور."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "den Armen mehr Macht zu geben.",
+                    "en": "to give more power to the poor.",
+                    "ar": "إعطاء المزيد من القوة للفقراء.",
+                    "tr": "Fakirlere daha fazla güç vermek.",
+                    "uk": "дати більше влади бідним.",
+                    "ru": "дать больше власти бедным.",
+                    "pl": "danie więcej władzy biednym.",
+                    "fa": "قدرت بیشتری به فقرا دادن."
+                }
+            }
+        ],
+        "correctAnswer": 1,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "126",
+        "question": {
+            "de": "Was bekommen wahlberechtigte Bürger und Bürgerinnen in Deutschland vor einer Wahl?",
+            "en": "What do eligible voters in Germany receive before an election?",
+            "ar": "ماذا يحصل عليه الناخبون المؤهلون في ألمانيا قبل الانتخابات؟",
+            "tr": "Almanya'da seçmenler seçimden önce ne alır?",
+            "uk": "Що отримують виборці в Німеччині перед виборами?",
+            "ru": "Что получают избиратели в Германии перед выборами?",
+            "pl": "Co otrzymują wyborcy w Niemczech przed wyborami?",
+            "fa": "رأی‌دهندگان واجد شرایط در آلمان قبل از انتخابات چه چیزی دریافت می‌کنند؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "eine Wahlbenachrichtigung von der Gemeinde",
+                    "en": "an election notification from the municipality",
+                    "ar": "إشعار انتخابي من البلدية",
+                    "tr": "Belediyeden seçim bildirimi",
+                    "uk": "повідомлення про вибори від громади",
+                    "ru": "уведомление о выборах от муниципалитета",
+                    "pl": "powiadomienie o wyborach od gminy",
+                    "fa": "اطلاعیه انتخاباتی از شهرداری"
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "eine Wahlerlaubnis vom Bundespräsidenten / von der Bundespräsidentin",
+                    "en": "a voting permit from the Federal President",
+                    "ar": "تصريح انتخابي من الرئيس الاتحادي",
+                    "tr": "Federal Başkan'dan bir oy kullanma izni",
+                    "uk": "дозвіл на голосування від Федерального президента",
+                    "ru": "разрешение на голосование от федерального президента",
+                    "pl": "pozwolenie na głosowanie od prezydenta federalnego",
+                    "fa": "مجوز رأی‌گیری از رئیس‌جمهور فدرال"
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "eine Benachrichtigung von der Bundesversammlung",
+                    "en": "a notification from the Federal Assembly",
+                    "ar": "إشعار من الجمعية الاتحادية",
+                    "tr": "Federal Meclis'ten bir bildirim",
+                    "uk": "повідомлення від Федеральних зборів",
+                    "ru": "уведомление от Федерального собрания",
+                    "pl": "powiadomienie od Zgromadzenia Federalnego",
+                    "fa": "اطلاعیه‌ای از مجمع فدرال"
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "eine Benachrichtigung vom Pfarramt",
+                    "en": "a notification from the parish office",
+                    "ar": "إشعار من مكتب الرعية",
+                    "tr": "Kilise ofisinden bir bildirim",
+                    "uk": "повідомлення від парафіяльного офісу",
+                    "ru": "уведомление от приходской канцелярии",
+                    "pl": "powiadomienie z kancelarii parafialnej",
+                    "fa": "اطلاعیه‌ای از دفتر کشیشی"
+                }
+            }
+        ],
+        "correctAnswer": 0,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "127",
+        "question": {
+            "de": "Warum gibt es die 5 %-Hürde im Wahlgesetz der Bundesrepublik Deutschland? Es gibt sie, weil …",
+            "en": "Why does the 5% threshold exist in the election law of the Federal Republic of Germany? It exists because …",
+            "ar": "لماذا توجد نسبة الحسم 5٪ في قانون الانتخابات لجمهورية ألمانيا الاتحادية؟ توجد لأن ...",
+            "tr": "Almanya Federal Cumhuriyeti seçim yasasında %5 barajı neden var? Çünkü ...",
+            "uk": "Чому в законі про вибори Федеративної Республіки Німеччина існує 5%-й бар’єр? Він існує тому, що …",
+            "ru": "Почему существует 5%-ный барьер в избирательном законодательстве Федеративной Республики Германия? Он существует, потому что …",
+            "pl": "Dlaczego w prawie wyborczym Republiki Federalnej Niemiec istnieje próg 5%? Istnieje, ponieważ …",
+            "fa": "چرا در قانون انتخابات جمهوری فدرال آلمان آستانه ۵٪ وجود دارد؟ وجود دارد زیرا ..."
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "die Programme von vielen kleinen Parteien viele Gemeinsamkeiten haben.",
+                    "en": "the programs of many small parties have many similarities.",
+                    "ar": "برامج العديد من الأحزاب الصغيرة لديها العديد من التشابهات.",
+                    "tr": "Birçok küçük partinin programları birçok benzerlik içeriyor.",
+                    "uk": "програми багатьох малих партій мають багато схожостей.",
+                    "ru": "программы многих мелких партий имеют много сходств.",
+                    "pl": "programy wielu małych partii mają wiele podobieństw.",
+                    "fa": "برنامه‌های بسیاری از احزاب کوچک شباهت‌های زیادی دارند."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "die Bürger und Bürgerinnen bei vielen kleinen Parteien die Orientierung verlieren können.",
+                    "en": "citizens may lose orientation with many small parties.",
+                    "ar": "قد يضيع المواطنون بين العديد من الأحزاب الصغيرة.",
+                    "tr": "Vatandaşlar birçok küçük partiyle yönlerini kaybedebilir.",
+                    "uk": "громадяни можуть втратити орієнтацію з багатьма малими партіями.",
+                    "ru": "граждане могут потерять ориентацию при наличии множества мелких партий.",
+                    "pl": "obywatele mogą stracić orientację przy wielu małych partiach.",
+                    "fa": "ممکن است شهروندان با وجود احزاب کوچک زیاد، گمراه شوند."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "viele kleine Parteien die Regierungsbildung erschweren.",
+                    "en": "many small parties make forming a government more difficult.",
+                    "ar": "الأحزاب الصغيرة العديدة تجعل تشكيل الحكومة أكثر صعوبة.",
+                    "tr": "Birçok küçük parti hükümetin kurulmasını zorlaştırır.",
+                    "uk": "багато малих партій ускладнюють формування уряду.",
+                    "ru": "множество мелких партий затрудняют формирование правительства.",
+                    "pl": "wiele małych partii utrudnia tworzenie rządu.",
+                    "fa": "بسیاری از احزاب کوچک تشکیل دولت را دشوار می‌کنند."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "die kleinen Parteien nicht so viel Geld haben, um die Politiker und Politikerinnen zu bezahlen.",
+                    "en": "small parties do not have enough money to pay politicians.",
+                    "ar": "الأحزاب الصغيرة ليس لديها أموال كافية لدفع رواتب السياسيين.",
+                    "tr": "Küçük partilerin politikacıları ödeyecek kadar parası yok.",
+                    "uk": "малі партії не мають достатньо грошей для оплати політиків.",
+                    "ru": "у мелких партий недостаточно средств для оплаты политиков.",
+                    "pl": "małe partie nie mają wystarczająco pieniędzy na opłacenie polityków.",
+                    "fa": "احزاب کوچک پول کافی برای پرداخت به سیاستمداران ندارند."
+                }
+            }
+        ],
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "128",
+        "question": {
+            "de": "Parlamentsmitglieder, die von den Bürgern und Bürgerinnen gewählt werden, nennt man …",
+            "en": "Members of parliament elected by citizens are called …",
+            "ar": "أعضاء البرلمان الذين ينتخبهم المواطنون يُسمون ...",
+            "tr": "Vatandaşlar tarafından seçilen parlamento üyelerine ... denir.",
+            "uk": "Члени парламенту, обрані громадянами, називаються …",
+            "ru": "Члены парламента, избранные гражданами, называются …",
+            "pl": "Członkowie parlamentu wybierani przez obywateli nazywani są …",
+            "fa": "اعضای پارلمان که توسط شهروندان انتخاب می‌شوند، ... نامیده می‌شوند."
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "Abgeordnete.",
+                    "en": "representatives.",
+                    "ar": "نواب.",
+                    "tr": "temsilciler.",
+                    "uk": "представники.",
+                    "ru": "представители.",
+                    "pl": "przedstawiciele.",
+                    "fa": "نمایندگان."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "Kanzler / Kanzlerinnen.",
+                    "en": "chancellors.",
+                    "ar": "مستشارون.",
+                    "tr": "şansölyeler.",
+                    "uk": "канцлери.",
+                    "ru": "канцлеры.",
+                    "pl": "kanclerze.",
+                    "fa": "صدر اعظم‌ها."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Botschafter / Botschafterinnen.",
+                    "en": "ambassadors.",
+                    "ar": "سفراء.",
+                    "tr": "büyükelçiler.",
+                    "uk": "посли.",
+                    "ru": "послы.",
+                    "pl": "ambasadorowie.",
+                    "fa": "سفیران."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Ministerpräsidenten / Ministerpräsidentinnen.",
+                    "en": "state premiers.",
+                    "ar": "رؤساء وزراء الولايات.",
+                    "tr": "eyalet başbakanları.",
+                    "uk": "прем’єри.",
+                    "ru": "главы правительств земель.",
+                    "pl": "premierzy landów.",
+                    "fa": "نخست‌وزیران ایالتی."
+                }
+            }
+        ],
+        "correctAnswer": 0,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "129",
+        "question": {
+            "de": "Vom Volk gewählt wird in Deutschland …",
+            "en": "In Germany, the following is elected by the people …",
+            "ar": "ما يتم انتخابه من قبل الشعب في ألمانيا هو ...",
+            "tr": "Almanya'da halk tarafından seçilen ...",
+            "uk": "В Німеччині народом обирається …",
+            "ru": "В Германии народом избирается …",
+            "pl": "W Niemczech przez lud wybierany jest …",
+            "fa": "در آلمان توسط مردم انتخاب می‌شود ..."
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "der Bundeskanzler / die Bundeskanzlerin.",
+                    "en": "the Federal Chancellor.",
+                    "ar": "المستشار / المستشارة الاتحادية.",
+                    "tr": "Federal Şansölye.",
+                    "uk": "Федеральний канцлер.",
+                    "ru": "Федеральный канцлер.",
+                    "pl": "Kanclerz federalny.",
+                    "fa": "صدر اعظم فدرال."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "der Ministerpräsident / die Ministerpräsidentin eines Bundeslandes.",
+                    "en": "the Minister-President of a federal state.",
+                    "ar": "رئيس وزراء إحدى الولايات الفيدرالية.",
+                    "tr": "Bir eyaletin başbakanı.",
+                    "uk": "Прем’єр-міністр федеральної землі.",
+                    "ru": "Министр-президент одной из федеральных земель.",
+                    "pl": "Premier landu.",
+                    "fa": "نخست‌وزیر یکی از ایالت‌های فدرال."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "der Bundestag.",
+                    "en": "the Bundestag.",
+                    "ar": "البوندستاغ.",
+                    "tr": "Bundestag.",
+                    "uk": "Бундестаг.",
+                    "ru": "Бундестаг.",
+                    "pl": "Bundestag.",
+                    "fa": "بوندستاگ."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "der Bundespräsident / die Bundespräsidentin.",
+                    "en": "the Federal President.",
+                    "ar": "رئيس / رئيسة ألمانيا الاتحادية.",
+                    "tr": "Federal Başkan.",
+                    "uk": "Федеральний президент.",
+                    "ru": "Федеральный президент.",
+                    "pl": "Prezydent federalny.",
+                    "fa": "رئیس‌جمهور فدرال."
+                }
+            }
+        ],
+        "correctAnswer": 2,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "130",
+        "question": {
+            "de": "Welcher Stimmzettel wäre bei einer Bundestagswahl gültig?",
+            "en": "Which ballot would be valid in a Bundestag election?",
+            "ar": "أي ورقة اقتراع ستكون صالحة في انتخابات البوندستاغ؟",
+            "tr": "Bundestag seçimlerinde hangi oy pusulası geçerli olur?",
+            "uk": "Який бюлетень був би дійсним на виборах до Бундестагу?",
+            "ru": "Какой бюллетень будет действительным на выборах в Бундестаг?",
+            "pl": "Która karta do głosowania byłaby ważna w wyborach do Bundestagu?",
+            "fa": "کدام برگه رأی در انتخابات بوندستاگ معتبر خواهد بود؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "1",
+                    "en": "1",
+                    "ar": "1",
+                    "tr": "1",
+                    "uk": "1",
+                    "ru": "1",
+                    "pl": "1",
+                    "fa": "1"
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "2",
+                    "en": "2",
+                    "ar": "2",
+                    "tr": "2",
+                    "uk": "2",
+                    "ru": "2",
+                    "pl": "2",
+                    "fa": "2"
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "3",
+                    "en": "3",
+                    "ar": "3",
+                    "tr": "3",
+                    "uk": "3",
+                    "ru": "3",
+                    "pl": "3",
+                    "fa": "3"
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "4",
+                    "en": "4",
+                    "ar": "4",
+                    "tr": "4",
+                    "uk": "4",
+                    "ru": "4",
+                    "pl": "4",
+                    "fa": "4"
+                }
+            }
+        ],
+        "correctAnswer": 0,
+        image: require('../assets/images/130.png'),
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "131",
+        "question": {
+            "de": "In Deutschland ist ein Bürgermeister / eine Bürgermeisterin …",
+            "en": "In Germany, a mayor is …",
+            "ar": "في ألمانيا، العمدة هو / هي ...",
+            "tr": "Almanya'da bir belediye başkanı ...",
+            "uk": "В Німеччині мер — це …",
+            "ru": "В Германии мэр — это …",
+            "pl": "W Niemczech burmistrz to …",
+            "fa": "در آلمان شهردار ... است."
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "der Leiter / die Leiterin einer Schule.",
+                    "en": "the head of a school.",
+                    "ar": "مدير / مديرة مدرسة.",
+                    "tr": "bir okulun müdürü.",
+                    "uk": "керівник / керівниця школи.",
+                    "ru": "директор школы.",
+                    "pl": "dyrektor szkoły.",
+                    "fa": "مدیر یک مدرسه."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "der Chef / die Chefin einer Bank.",
+                    "en": "the head of a bank.",
+                    "ar": "رئيس / رئيسة بنك.",
+                    "tr": "bir bankanın müdürü.",
+                    "uk": "керівник / керівниця банку.",
+                    "ru": "глава банка.",
+                    "pl": "szef banku.",
+                    "fa": "رئیس یک بانک."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "das Oberhaupt einer Gemeinde.",
+                    "en": "the head of a municipality.",
+                    "ar": "رئيس / رئيسة بلدية.",
+                    "tr": "bir belediyenin başkanı.",
+                    "uk": "голова громади.",
+                    "ru": "глава муниципалитета.",
+                    "pl": "głowa gminy.",
+                    "fa": "رئیس یک شهرداری."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "der / die Vorsitzende einer Partei.",
+                    "en": "the leader of a party.",
+                    "ar": "رئيس / رئيسة حزب.",
+                    "tr": "bir partinin lideri.",
+                    "uk": "голова партії.",
+                    "ru": "лидер партии.",
+                    "pl": "przewodniczący partii.",
+                    "fa": "رئیس یک حزب."
+                }
+            }
+        ],
+        "correctAnswer": 2,
+        "category": "local_government"
+    }
+    ,
+    {
+        "id": "132",
+        "question": {
+            "de": "Viele Menschen in Deutschland arbeiten in ihrer Freizeit ehrenamtlich. Was bedeutet das?",
+            "en": "Many people in Germany do voluntary work in their free time. What does that mean?",
+            "ar": "الكثير من الناس في ألمانيا يعملون في أوقات فراغهم بشكل تطوعي. ماذا يعني ذلك؟",
+            "tr": "Almanya'da birçok kişi boş zamanlarında gönüllü çalışır. Bu ne anlama geliyor?",
+            "uk": "Багато людей у Німеччині займаються волонтерством у вільний час. Що це означає?",
+            "ru": "Многие люди в Германии занимаются волонтерской работой в свободное время. Что это значит?",
+            "pl": "Wielu ludzi w Niemczech pracuje społecznie w swoim czasie wolnym. Co to oznacza?",
+            "fa": "بسیاری از مردم در آلمان در وقت آزاد خود به کارهای داوطلبانه مشغول می‌شوند. این چه معنی دارد؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "Sie arbeiten als Soldaten / Soldatinnen.",
+                    "en": "They work as soldiers.",
+                    "ar": "يعملون كجنود.",
+                    "tr": "Asker olarak çalışıyorlar.",
+                    "uk": "Вони працюють солдатами.",
+                    "ru": "Они работают солдатами.",
+                    "pl": "Pracują jako żołnierze.",
+                    "fa": "به‌عنوان سرباز کار می‌کنند."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "Sie arbeiten freiwillig und unbezahlt in Vereinen und Verbänden.",
+                    "en": "They work voluntarily and unpaid in clubs and associations.",
+                    "ar": "يعملون بشكل تطوعي وبدون أجر في النوادي والجمعيات.",
+                    "tr": "Kulüplerde ve derneklerde gönüllü ve ücretsiz çalışıyorlar.",
+                    "uk": "Вони працюють добровільно та безоплатно у клубах і спілках.",
+                    "ru": "Они работают добровольно и без оплаты в клубах и ассоциациях.",
+                    "pl": "Pracują dobrowolnie i bezpłatnie w klubach i stowarzyszeniach.",
+                    "fa": "داوطلبانه و بدون حقوق در انجمن‌ها و باشگاه‌ها کار می‌کنند."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Sie arbeiten in der Bundesregierung.",
+                    "en": "They work in the federal government.",
+                    "ar": "يعملون في الحكومة الفيدرالية.",
+                    "tr": "Federal hükümette çalışıyorlar.",
+                    "uk": "Вони працюють у федеральному уряді.",
+                    "ru": "Они работают в федеральном правительстве.",
+                    "pl": "Pracują w rządzie federalnym.",
+                    "fa": "در دولت فدرال کار می‌کنند."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Sie arbeiten in einem Krankenhaus und verdienen dabei Geld.",
+                    "en": "They work in a hospital and earn money.",
+                    "ar": "يعملون في مستشفى ويكسبون المال.",
+                    "tr": "Bir hastanede çalışıyorlar ve para kazanıyorlar.",
+                    "uk": "Вони працюють у лікарні та заробляють гроші.",
+                    "ru": "Они работают в больнице и зарабатывают деньги.",
+                    "pl": "Pracują w szpitalu i zarabiają pieniądze.",
+                    "fa": "در بیمارستان کار می‌کنند و پول درمی‌آورند."
+                }
+            }
+        ],
+        "correctAnswer": 1,
+        "category": "volunteering"
+    }
+    ,
+    {
+        "id": "133",
+        "question": {
+            "de": "Was ist bei Bundestags- und Landtagswahlen in Deutschland erlaubt?",
+            "en": "What is allowed in Bundestag and state parliament elections in Germany?",
+            "ar": "ما هو المسموح به في انتخابات البوندستاغ والبرلمانات المحلية في ألمانيا؟",
+            "tr": "Almanya'da Bundestag ve eyalet meclisi seçimlerinde neler yapılabilir?",
+            "uk": "Що дозволено на виборах до Бундестагу та земельних парламентів у Німеччині?",
+            "ru": "Что разрешено на выборах в Бундестаг и земельные парламенты в Германии?",
+            "pl": "Co jest dozwolone w wyborach do Bundestagu i parlamentów krajowych w Niemczech?",
+            "fa": "چه چیزی در انتخابات بوندستاغ و پارلمان‌های ایالتی در آلمان مجاز است؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "Der Ehemann wählt für seine Frau mit.",
+                    "en": "The husband votes for his wife.",
+                    "ar": "الزوج يختار بالنيابة عن زوجته.",
+                    "tr": "Koca, eşi adına oy kullanır.",
+                    "uk": "Чоловік голосує за свою дружину.",
+                    "ru": "Муж выбирает за свою жену.",
+                    "pl": "Mąż głosuje za swoją żoną.",
+                    "fa": "همسر به جای همسر خود رای می‌دهد."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "Man kann durch Briefwahl seine Stimme abgeben.",
+                    "en": "One can vote by absentee ballot.",
+                    "ar": "يمكنك الإدلاء بصوتك عبر البريد.",
+                    "tr": "Postayla oy kullanılabilir.",
+                    "uk": "Можна проголосувати поштою.",
+                    "ru": "Можно проголосовать по почте.",
+                    "pl": "Można głosować za pomocą głosowania korespondencyjnego.",
+                    "fa": "می‌توان از طریق رای‌گیری پستی رأی داد."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Man kann am Wahltag telefonisch seine Stimme abgeben.",
+                    "en": "One can vote by phone on election day.",
+                    "ar": "يمكنك الإدلاء بصوتك عبر الهاتف في يوم الانتخابات.",
+                    "tr": "Seçim gününde telefonla oy kullanılabilir.",
+                    "uk": "Можна проголосувати по телефону в день виборів.",
+                    "ru": "Можно проголосовать по телефону в день выборов.",
+                    "pl": "Można głosować przez telefon w dniu wyborów.",
+                    "fa": "می‌توان در روز انتخابات از طریق تلفن رأی داد."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Kinder ab dem Alter von 14 Jahren dürfen wählen.",
+                    "en": "Children from the age of 14 are allowed to vote.",
+                    "ar": "يُسمح للأطفال من سن 14 عامًا بالإدلاء بأصواتهم.",
+                    "tr": "14 yaşından itibaren çocuklar oy kullanabilir.",
+                    "uk": "Діти з 14 років можуть голосувати.",
+                    "ru": "Дети с 14 лет могут голосовать.",
+                    "pl": "Dzieci od 14. roku życia mogą głosować.",
+                    "fa": "کودکان از سن 14 سالگی اجازه دارند رأی بدهند."
+                }
+            }
+        ],
+        "correctAnswer": 1,
+        "category": "elections"
+    }
+    ,
+    {
+        "id": "134",
+        "question": {
+            "de": "Man will die Buslinie abschaffen, mit der Sie immer zur Arbeit fahren. Was können Sie machen, um die Buslinie zu erhalten?",
+            "en": "You want to abolish the bus line you always take to work. What can you do to keep the bus line?",
+            "ar": "أنت تريد إلغاء خط الحافلات الذي تأخذه دائمًا إلى العمل. ماذا يمكنك أن تفعل للحفاظ على الخط؟",
+            "tr": "İşe her zaman gittiğiniz otobüs hattını kaldırmak istiyorsunuz. Otobüs hattını korumak için ne yapabilirsiniz?",
+            "uk": "Ви хочете скасувати автобусний маршрут, яким ви завжди їдете на роботу. Що ви можете зробити, щоб зберегти цей маршрут?",
+            "ru": "Вы хотите отменить автобусный маршрут, которым вы всегда ездите на работу. Что вы можете сделать, чтобы сохранить маршрут?",
+            "pl": "Chcesz zlikwidować linię autobusową, którą zawsze jeździsz do pracy. Co możesz zrobić, aby zachować linię autobusową?",
+            "fa": "شما می‌خواهید خط اتوبوس را که همیشه برای رفتن به سرکار از آن استفاده می‌کنید، لغو کنید. برای حفظ این خط اتوبوس چه کاری می‌توانید انجام دهید؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "Ich beteilige mich an einer Bürgerinitiative für die Erhaltung der Buslinie oder gründe selber eine Initiative.",
+                    "en": "I participate in a citizens' initiative to keep the bus line or start my own initiative.",
+                    "ar": "أشارك في مبادرة مواطنين للحفاظ على خط الحافلات أو أبدأ مبادرة خاصة بي.",
+                    "tr": "Otobüs hattını korumak için bir vatandaşlar girişimine katılırım veya kendi girişimimi başlatırım.",
+                    "uk": "Я беру участь в ініціативі громадян, щоб зберегти автобусний маршрут, або створюю свою власну ініціативу.",
+                    "ru": "Я участвую в гражданской инициативе по сохранению автобусного маршрута или создаю собственную инициативу.",
+                    "pl": "Biorę udział w inicjatywie obywatelskiej na rzecz zachowania linii autobusowej lub zakładam własną inicjatywę.",
+                    "fa": "من در یک ابتکار شهروندی برای حفظ خط اتوبوس شرکت می‌کنم یا ابتکار خود را شروع می‌کنم."
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "Ich werde Mitglied in einem Sportverein und trainiere Radfahren.",
+                    "en": "I become a member of a sports club and train cycling.",
+                    "ar": "أصبح عضوًا في نادي رياضي وأتدرب على ركوب الدراجات.",
+                    "tr": "Bir spor kulübüne üye olurum ve bisiklet eğitimi alırım.",
+                    "uk": "Я стаю членом спортивного клубу і тренуюся на велосипеді.",
+                    "ru": "Я становлюсь членом спортивного клуба и тренируюсь в велоспорте.",
+                    "pl": "Zostaję członkiem klubu sportowego i trenuję jazdę na rowerze.",
+                    "fa": "من عضو یک باشگاه ورزشی می‌شوم و تمرین دوچرخه‌سواری می‌کنم."
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Ich wende mich an das Finanzamt, weil ich als Steuerzahler / Steuerzahlerin ein Recht auf die Buslinie habe.",
+                    "en": "I contact the tax office because as a taxpayer I have a right to the bus line.",
+                    "ar": "أتواصل مع مكتب الضرائب لأنني كدافع ضرائب لي الحق في خط الحافلات.",
+                    "tr": "Vergi dairesine başvururum çünkü bir vergi mükellefi olarak otobüs hattına hakkım var.",
+                    "uk": "Я звертаюсь до податкової служби, оскільки як платник податків маю право на автобусний маршрут.",
+                    "ru": "Я обращаюсь в налоговую службу, потому что как налогоплательщик имею право на автобусный маршрут.",
+                    "pl": "Zgłaszam się do urzędu skarbowego, ponieważ jako podatnik mam prawo do linii autobusowej.",
+                    "fa": "من با اداره مالیات تماس می‌گیرم چون به عنوان یک مالیات‌دهنده حق استفاده از خط اتوبوس را دارم."
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Ich schreibe einen Brief an das Forstamt der Gemeinde.",
+                    "en": "I write a letter to the local forestry office.",
+                    "ar": "أكتب رسالة إلى مكتب الغابات المحلي.",
+                    "tr": "Yerel orman dairesine bir mektup yazarım.",
+                    "uk": "Я пишу лист до місцевого лісового відділу.",
+                    "ru": "Я пишу письмо в местное лесное хозяйство.",
+                    "pl": "Piszę list do lokalnego urzędu leśnego.",
+                    "fa": "من نامه‌ای به اداره جنگلداری محلی می‌نویسم."
+                }
+            }
+        ],
+        "correctAnswer": 0,
+        "category": "citizenship"
+    }
+    ,
+    {
+        "id": "135",
+        "question": {
+            "de": "Wen vertreten die Gewerkschaften in Deutschland?",
+            "en": "Whom do trade unions represent in Germany?",
+            "ar": "من يمثلهم النقابات العمالية في ألمانيا؟",
+            "tr": "Almanya'da sendikalar kimi temsil eder?",
+            "uk": "Кого представляють профспілки в Німеччині?",
+            "ru": "Кого представляют профсоюзы в Германии?",
+            "pl": "Kogo reprezentują związki zawodowe w Niemczech?",
+            "fa": "اتحادیه‌های کارگری در آلمان چه کسانی را نمایندگی می‌کنند؟"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "große Unternehmen",
+                    "en": "large companies",
+                    "ar": "الشركات الكبيرة",
+                    "tr": "büyük şirketler",
+                    "uk": "великі компанії",
+                    "ru": "крупные компании",
+                    "pl": "duże firmy",
+                    "fa": "شرکت‌های بزرگ"
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "kleine Unternehmen",
+                    "en": "small companies",
+                    "ar": "الشركات الصغيرة",
+                    "tr": "küçük şirketler",
+                    "uk": "малі компанії",
+                    "ru": "малые компании",
+                    "pl": "małe firmy",
+                    "fa": "شرکت‌های کوچک"
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Selbständige",
+                    "en": "self-employed individuals",
+                    "ar": "الأشخاص العاملين لحسابهم الخاص",
+                    "tr": "serbest çalışanlar",
+                    "uk": "самозайняті",
+                    "ru": "самозанятые",
+                    "pl": "osoby prowadzące działalność gospodarczą",
+                    "fa": "افراد خوداشتغال"
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Arbeitnehmer und Arbeitnehmerinnen",
+                    "en": "employees",
+                    "ar": "العاملين والعاملات",
+                    "tr": "çalışanlar",
+                    "uk": "працівники",
+                    "ru": "работники",
+                    "pl": "pracownicy",
+                    "fa": "کارگران و کارمندان"
+                }
+            }
+        ],
+        "correctAnswer": 3,
+        "category": "work"
+    }
+    ,
+    {
+        "id": "136",
+        "question": {
+            "de": "Sie gehen in Deutschland zum Arbeitsgericht bei …",
+            "en": "You go to the labor court in Germany for …",
+            "ar": "تذهب إلى المحكمة العمالية في ألمانيا بسبب ...",
+            "tr": "Almanya'da iş mahkemesine ... için gidersiniz",
+            "uk": "Ви йдете до трудового суду в Німеччині через ...",
+            "ru": "Вы обращаетесь в трудовой суд в Германии по поводу ...",
+            "pl": "Idziesz do sądu pracy w Niemczech w sprawie ...",
+            "fa": "شما به دادگاه کارگری در آلمان برای ... می‌روید"
+        },
+        "answers": [
+            {
+                "id": 0,
+                "text": {
+                    "de": "falscher Nebenkostenabrechnung",
+                    "en": "incorrect utility bill",
+                    "ar": "خطأ في فاتورة الخدمات",
+                    "tr": "yanlış yan gider faturası",
+                    "uk": "неправильний рахунок за комунальні послуги",
+                    "ru": "неправильный счет за коммунальные услуги",
+                    "pl": "niepoprawny rachunek za media",
+                    "fa": "صورتحساب خدمات اشتباه"
+                }
+            },
+            {
+                "id": 1,
+                "text": {
+                    "de": "ungerechtfertigter Kündigung durch Ihren Chef / Ihre Chefin",
+                    "en": "unjustified dismissal by your boss",
+                    "ar": "الفصل غير المبرر من رئيسك / رئيستك",
+                    "tr": "patronunuz tarafından haksız fesih",
+                    "uk": "несправедливий звільнення вашим начальником",
+                    "ru": "несправедливое увольнение вашим начальником",
+                    "pl": "nieuzasadnione zwolnienie przez szefa",
+                    "fa": "اخراج بی‌مورد توسط رئیس شما"
+                }
+            },
+            {
+                "id": 2,
+                "text": {
+                    "de": "Problemen mit den Nachbarn / Nachbarinnen",
+                    "en": "problems with neighbors",
+                    "ar": "مشاكل مع الجيران",
+                    "tr": "komşularla problemler",
+                    "uk": "проблеми з сусідами",
+                    "ru": "проблемы с соседями",
+                    "pl": "problemy z sąsiadami",
+                    "fa": "مشکلات با همسایگان"
+                }
+            },
+            {
+                "id": 3,
+                "text": {
+                    "de": "Schwierigkeiten nach einem Verkehrsunfall",
+                    "en": "difficulties after a traffic accident",
+                    "ar": "الصعوبات بعد حادثة مرور",
+                    "tr": "trafik kazasından sonra zorluklar",
+                    "uk": "складнощі після дорожньо-транспортної пригоди",
+                    "ru": "трудности после ДТП",
+                    "pl": "trudności po wypadku drogowym",
+                    "fa": "مشکلات پس از تصادف رانندگی"
+                }
+            }
+        ],
+        "correctAnswer": 1,
+        "category": "work"
+    }
+    ,
       {
         id: '1',
         question: {
