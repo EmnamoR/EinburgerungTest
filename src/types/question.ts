@@ -35,4 +35,5 @@ export interface Question {
   correctAnswer: number;
   category: string;
   federalState?: string;
+  date?: boolean;
 }

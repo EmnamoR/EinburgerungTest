@@ -12,6 +12,7 @@ import PracticeModeScreen from './src/screens/PracticeModeScreen';
 import TestSimulationScreen from './src/screens/TestSimulationScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import { ProgressProvider } from './src/context/ProgressContext';
+import HistoricalDatesScreen from './src/screens/HistoricalDatesScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -47,6 +48,11 @@ export default function App() {
                 <Stack.Screen 
                   name="Settings" 
                   component={SettingsScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen 
+                  name="HistoricalDates" 
+                  component={HistoricalDatesScreen}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

@@ -1,39 +1,83 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { useLanguage } from '../context/LanguageContext';
+import { useBookmarks } from '../context/BookmarkContext';
+import { useProgress } from '../context/ProgressContext';
 import { colors } from '../constants/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { SettingsScreenNavigationProp } from '../types/navigation';
 
 export const SettingsScreen = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const { selectedLanguage, setLanguage } = useLanguage();
+  const { clearAllBookmarks } = useBookmarks();
+  const { clearAllProgress } = useProgress();
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
 
-  const { selectedLanguage } = useLanguage();
-  const [showTranslations, setShowTranslations] = useState(true);
-  const [enableSound, setEnableSound] = useState(false);
-  const [enableVibration, setEnableVibration] = useState(true);
+  const languages = [
+    { code: 'off', name: 'OFF (No Translation)' },
+    { code: 'en', name: 'English' },
+    { code: 'ar', name: 'العربية' },
+    { code: 'tr', name: 'Türkçe' },
+    { code: 'uk', name: 'Українська' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'pl', name: 'Polski' },
+    { code: 'fa', name: 'فارسی' },
+  ];
 
-  const handleToggleSetting = async (
-    setting: string,
-    value: boolean,
-    setter: (value: boolean) => void
-  ) => {
-    try {
-      await AsyncStorage.setItem(setting, JSON.stringify(value));
-      setter(value);
-    } catch (error) {
-      console.error(`Error saving ${setting}:`, error);
-    }
+  const handleResetProgress = () => {
+    Alert.alert(
+      'Reset All Progress',
+      'This will completely reset your progress, bookmarks, and settings. This action cannot be undone. Are you sure?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Reset',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Clear all progress data
+              await clearAllProgress();
+              
+              // Clear all bookmarks
+              await clearAllBookmarks();
+              
+              // Reset language to English (not OFF)
+              setLanguage('en');
+              
+              // Clear all bundesland-specific progress
+              const keys = await AsyncStorage.getAllKeys();
+              const progressKeys = keys.filter(key => 
+                key.startsWith('answeredQuestions_') || 
+                key === 'answeredQuestions' ||
+                key === 'questionProgress' ||
+                key === 'bookmarkedQuestions' ||
+                key === 'showTranslations'
+              );
+              await AsyncStorage.multiRemove(progressKeys);
+              
+              Alert.alert('Success', 'All progress has been reset successfully.');
+            } catch (error) {
+              console.error('Error resetting progress:', error);
+              Alert.alert('Error', 'Failed to reset progress. Please try again.');
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
           <Feather name="chevron-left" size={24} color={colors.text.primary} />
@@ -47,9 +91,10 @@ export const SettingsScreen = () => {
         {/* Language Settings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Language Settings</Text>
-          <TouchableOpacity 
+          
+          <TouchableOpacity
             style={styles.settingItem}
-            onPress={() => navigation.navigate('LanguageSelection')}
+            onPress={() => setShowLanguageModal(true)}
           >
             <View style={styles.settingLeft}>
               <Feather name="globe" size={20} color={colors.accent} />
@@ -57,83 +102,41 @@ export const SettingsScreen = () => {
             </View>
             <View style={styles.settingRight}>
               <Text style={styles.settingValue}>
-                {selectedLanguage?.toUpperCase() || 'EN'}
+                {selectedLanguage === 'off' ? 'OFF' : selectedLanguage?.toUpperCase() || 'EN'}
               </Text>
-              <Feather name="chevron-right" size={20} color={colors.text.secondary} />
+              <Feather
+                name="chevron-right"
+                size={20}
+                color={colors.text.secondary}
+              />
             </View>
           </TouchableOpacity>
-        </View>
-
-        {/* Display Settings */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Display Settings</Text>
-          <View style={styles.settingItem}>
-            <View style={styles.settingLeft}>
-              <Feather name="type" size={20} color={colors.accent} />
-              <Text style={styles.settingText}>Show Translations</Text>
-            </View>
-            <Switch
-              value={showTranslations}
-              onValueChange={(value) => 
-                handleToggleSetting('showTranslations', value, setShowTranslations)
-              }
-              trackColor={{ false: '#767577', true: `${colors.accent}50` }}
-              thumbColor={showTranslations ? colors.accent : '#f4f3f4'}
-            />
-          </View>
-        </View>
-
-        {/* Feedback Settings */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Feedback Settings</Text>
-          <View style={styles.settingItem}>
-            <View style={styles.settingLeft}>
-              <Feather name="volume-2" size={20} color={colors.accent} />
-              <Text style={styles.settingText}>Sound Effects</Text>
-            </View>
-            <Switch
-              value={enableSound}
-              onValueChange={(value) => 
-                handleToggleSetting('enableSound', value, setEnableSound)
-              }
-              trackColor={{ false: '#767577', true: `${colors.accent}50` }}
-              thumbColor={enableSound ? colors.accent : '#f4f3f4'}
-            />
-          </View>
-          <View style={styles.settingItem}>
-            <View style={styles.settingLeft}>
-              <Feather name="smartphone" size={20} color={colors.accent} />
-              <Text style={styles.settingText}>Vibration</Text>
-            </View>
-            <Switch
-              value={enableVibration}
-              onValueChange={(value) => 
-                handleToggleSetting('enableVibration', value, setEnableVibration)
-              }
-              trackColor={{ false: '#767577', true: `${colors.accent}50` }}
-              thumbColor={enableVibration ? colors.accent : '#f4f3f4'}
-            />
-          </View>
         </View>
 
         {/* Study Progress */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Study Progress</Text>
-          <TouchableOpacity 
+          
+          <TouchableOpacity
             style={styles.settingItem}
-            onPress={() => {}}
+            onPress={handleResetProgress}
           >
             <View style={styles.settingLeft}>
               <Feather name="refresh-ccw" size={20} color={colors.accent} />
-              <Text style={styles.settingText}>Reset Progress</Text>
+              <Text style={styles.settingText}>Reset All Progress</Text>
             </View>
-            <Feather name="chevron-right" size={20} color={colors.text.secondary} />
+            <Feather
+              name="chevron-right"
+              size={20}
+              color={colors.text.secondary}
+            />
           </TouchableOpacity>
         </View>
 
         {/* About Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>About</Text>
+          
           <View style={styles.settingItem}>
             <View style={styles.settingLeft}>
               <Feather name="info" size={20} color={colors.accent} />
@@ -143,6 +146,48 @@ export const SettingsScreen = () => {
           </View>
         </View>
       </View>
+
+      {/* Language Selection Modal */}
+      <Modal
+        visible={showLanguageModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowLanguageModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Language</Text>
+              <TouchableOpacity onPress={() => setShowLanguageModal(false)}>
+                <Feather name="x" size={24} color={colors.text.primary} />
+              </TouchableOpacity>
+            </View>
+            {languages.map((language) => (
+              <TouchableOpacity
+                key={language.code}
+                style={[
+                  styles.languageOption,
+                  selectedLanguage === language.code && styles.selectedLanguageOption
+                ]}
+                onPress={() => {
+                  setLanguage(language.code);
+                  setShowLanguageModal(false);
+                }}
+              >
+                <Text style={[
+                  styles.languageOptionText,
+                  selectedLanguage === language.code && styles.selectedLanguageOptionText
+                ]}>
+                  {language.name}
+                </Text>
+                {selectedLanguage === language.code && (
+                  <Feather name="check" size={20} color={colors.accent} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -228,6 +273,55 @@ const styles = StyleSheet.create({
   settingValue: {
     fontSize: 14,
     color: colors.text.secondary,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+  },
+  languageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 8,
+    backgroundColor: '#F8F9FA',
+  },
+  selectedLanguageOption: {
+    backgroundColor: `${colors.accent}15`,
+    borderWidth: 1,
+    borderColor: `${colors.accent}30`,
+  },
+  languageOptionText: {
+    fontSize: 14,
+    color: colors.text.primary,
+  },
+  selectedLanguageOptionText: {
+    color: colors.accent,
+    fontWeight: '500',
   },
 });
 

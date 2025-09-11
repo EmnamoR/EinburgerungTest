@@ -1,22 +1,20 @@
 // src/context/BookmarkContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface BookmarkContextType {
   bookmarkedQuestions: string[];
   toggleBookmark: (questionId: string) => void;
   isBookmarked: (questionId: string) => boolean;
-  loadBookmarks: () => Promise<void>;
+  loadBookmarks: () => void;
+  clearAllBookmarks: () => Promise<void>;
 }
 
-const BookmarkContext = createContext<BookmarkContextType>({
-  bookmarkedQuestions: [],
-  toggleBookmark: () => {},
-  isBookmarked: () => false,
-  loadBookmarks: async () => {},
-});
+const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined);
 
-export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const BOOKMARKS_STORAGE_KEY = 'bookmarkedQuestions';
+
+export const BookmarkProvider = ({ children }: { children: ReactNode }) => {
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<string[]>([]);
 
   useEffect(() => {
@@ -25,9 +23,10 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const loadBookmarks = async () => {
     try {
-      const saved = await AsyncStorage.getItem('bookmarkedQuestions');
-      if (saved) {
-        setBookmarkedQuestions(JSON.parse(saved));
+      const savedBookmarks = await AsyncStorage.getItem(BOOKMARKS_STORAGE_KEY);
+      if (savedBookmarks) {
+        const parsedBookmarks = JSON.parse(savedBookmarks);
+        setBookmarkedQuestions(parsedBookmarks);
       }
     } catch (error) {
       console.error('Error loading bookmarks:', error);
@@ -36,7 +35,7 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const saveBookmarks = async (bookmarks: string[]) => {
     try {
-      await AsyncStorage.setItem('bookmarkedQuestions', JSON.stringify(bookmarks));
+      await AsyncStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(bookmarks));
     } catch (error) {
       console.error('Error saving bookmarks:', error);
     }
@@ -47,18 +46,43 @@ export const BookmarkProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const newBookmarks = prev.includes(questionId)
         ? prev.filter(id => id !== questionId)
         : [...prev, questionId];
+      
       saveBookmarks(newBookmarks);
       return newBookmarks;
     });
   };
 
-  const isBookmarked = (questionId: string) => bookmarkedQuestions.includes(questionId);
+  const isBookmarked = (questionId: string) => {
+    return bookmarkedQuestions.includes(questionId);
+  };
+
+  const clearAllBookmarks = async () => {
+    try {
+      await AsyncStorage.removeItem(BOOKMARKS_STORAGE_KEY);
+      setBookmarkedQuestions([]);
+    } catch (error) {
+      console.error('Error clearing bookmarks:', error);
+      throw error;
+    }
+  };
 
   return (
-    <BookmarkContext.Provider value={{ bookmarkedQuestions, toggleBookmark, isBookmarked, loadBookmarks }}>
+    <BookmarkContext.Provider value={{
+      bookmarkedQuestions,
+      toggleBookmark,
+      isBookmarked,
+      loadBookmarks,
+      clearAllBookmarks,
+    }}>
       {children}
     </BookmarkContext.Provider>
   );
 };
 
-export const useBookmarks = () => useContext(BookmarkContext);
+export const useBookmarks = () => {
+  const context = useContext(BookmarkContext);
+  if (context === undefined) {
+    throw new Error('useBookmarks must be used within a BookmarkProvider');
+  }
+  return context;
+};

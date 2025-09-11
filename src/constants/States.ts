@@ -1,36 +1,36 @@
 // src/constants/States.ts
 
 export interface GermanState {
-    id: string;
-    name: string;
-  }
-  
-  export const germanStates: GermanState[] = [
-    { id: 'bw', name: 'Baden-Württemberg' },
-    { id: 'by', name: 'Bayern' },
-    { id: 'be', name: 'Berlin' },
-    { id: 'bb', name: 'Brandenburg' },
-    { id: 'hb', name: 'Bremen' },
-    { id: 'hh', name: 'Hamburg' },
-    { id: 'he', name: 'Hessen' },
-    { id: 'mv', name: 'Mecklenburg-Vorpommern' },
-    { id: 'ni', name: 'Niedersachsen' },
-    { id: 'nw', name: 'Nordrhein-Westfalen' },
-    { id: 'rp', name: 'Rheinland-Pfalz' },
-    { id: 'sl', name: 'Saarland' },
-    { id: 'sn', name: 'Sachsen' },
-    { id: 'st', name: 'Sachsen-Anhalt' },
-    { id: 'sh', name: 'Schleswig-Holstein' },
-    { id: 'th', name: 'Thüringen' },
-  ];
-  
-  // Helper function to get state by ID
-  export const getStateById = (id: string): GermanState | undefined => {
-    return germanStates.find(state => state.id === id);
-  };
-  
-  // Helper function to get state by name
-  export const getStateByName = (name: string): GermanState | undefined => {
-    return germanStates.find(state => state.name === name);
-  };
-  
+  id: string;
+  name: string;
+  flag: string;
+}
+
+export const germanStates: GermanState[] = [
+  { id: 'bw', name: 'Baden-Württemberg', flag: '🟡⚫' },
+  { id: 'by', name: 'Bayern', flag: '🔵⚪' },
+  { id: 'be', name: 'Berlin', flag: '🔴⚪' },
+  { id: 'bb', name: 'Brandenburg', flag: '🔴⚪' },
+  { id: 'hb', name: 'Bremen', flag: '🔴⚪' },
+  { id: 'hh', name: 'Hamburg', flag: '🔴' },
+  { id: 'he', name: 'Hessen', flag: '🔴⚪' },
+  { id: 'mv', name: 'Mecklenburg-Vorpommern', flag: '🔵⚪🔴' },
+  { id: 'ni', name: 'Niedersachsen', flag: '⚪🔴' },
+  { id: 'nw', name: 'Nordrhein-Westfalen', flag: '⚪🔴' },
+  { id: 'rp', name: 'Rheinland-Pfalz', flag: '⚫🔴🟡' },
+  { id: 'sl', name: 'Saarland', flag: '🔵⚪🔴' },
+  { id: 'sn', name: 'Sachsen', flag: '⚪🟢' },
+  { id: 'st', name: 'Sachsen-Anhalt', flag: '🟡⚫' },
+  { id: 'sh', name: 'Schleswig-Holstein', flag: '🔵⚪🔴' },
+  { id: 'th', name: 'Thüringen', flag: '⚪🔴' },
+];
+
+// Helper function to get state by ID
+export const getStateById = (id: string): GermanState | undefined => {
+  return germanStates.find(state => state.id === id);
+};
+
+// Helper function to get state by name
+export const getStateByName = (name: string): GermanState | undefined => {
+  return germanStates.find(state => state.name === name);
+};

@@ -1,16 +1,7 @@
+
 // src/screens/PracticeModeScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TouchableOpacity, 
-  SafeAreaView, 
-  Modal,
-  ScrollView,
-  Image,
-  ActivityIndicator
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Modal, ScrollView, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView, Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -18,20 +9,18 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { colors } from '../constants/Colors';
 import { useLanguage } from '../context/LanguageContext';
 import { useBookmarks } from '../context/BookmarkContext';
-// import { questions } from '../data/questions';
 import { questions as originalQuestions } from '../data/questions';
-
 import { RootStackParamList } from '../types/navigation';
 import { useProgress } from '../context/ProgressContext';
-
+import { getStateById } from '../constants/States';
 
 const LAST_QUESTION_INDEX_KEY = 'lastQuestionIndex';
 
 type PracticeModeRouteProp = RouteProp<RootStackParamList, 'PracticeMode'>;
 
-
-// Language options
+// Language options including OFF option
 const languages = [
+  { code: 'off', name: 'OFF' },
   { code: 'en', name: 'English' },
   { code: 'ar', name: 'العربية' },
   { code: 'tr', name: 'Türkçe' },
@@ -40,7 +29,6 @@ const languages = [
   { code: 'pl', name: 'Polski' },
   { code: 'fa', name: 'فارسی' },
 ];
-
 
 // Image handling component
 const QuestionImage = ({ source }: { source: any }) => {
@@ -74,6 +62,7 @@ const QuestionImage = ({ source }: { source: any }) => {
     </View>
   );
 };
+
 const shuffleArray = (array: any[]) => {
   const shuffledArray = [...array];
   for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -88,50 +77,150 @@ const PracticeModeScreen = () => {
   const route = useRoute<PracticeModeRouteProp>();
   const { selectedLanguage, setLanguage } = useLanguage();
   const { bookmarkedQuestions, toggleBookmark, isBookmarked } = useBookmarks();
-  const [questions, setQuestions] = useState(originalQuestions);
+  const { updateQuestionProgress } = useProgress();
 
+  // Get parameters from route
+  const bundeslandId = route.params?.bundesland;
+  const questionId = route.params?.questionId;
+
+  // Get selected state info
+  const selectedState = bundeslandId ? getStateById(bundeslandId) : null;
+
+  // States
+  const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState<Record<string, number>>({});
 
+  // Remove duplicate questions
+  const getUniqueQuestions = (questions: any[]) => {
+    const seen = new Set();
+    return questions.filter(q => {
+      if (seen.has(q.id)) {
+        console.log(`Removing duplicate question ID: ${q.id}`);
+        return false;
+      }
+      seen.add(q.id);
+      return true;
+    });
+  };
+
+  // Filter questions based on Bundesland
+  const getFilteredQuestions = () => {
+    // First, remove duplicates
+    const uniqueQuestions = getUniqueQuestions(originalQuestions);
+    console.log(`Cleaned ${originalQuestions.length} questions down to ${uniqueQuestions.length} unique`);
+
+    if (bundeslandId) {
+      // Show only questions for the selected Bundesland
+      console.log(`Filtering questions for bundesland: ${bundeslandId}`);
+      const filtered = uniqueQuestions.filter(q => q.federalState === bundeslandId);
+      console.log(`Found ${filtered.length} questions for ${bundeslandId}`);
+      return filtered;
+    }
+
+    // Show only general questions (no federalState) for main practice
+    console.log('Filtering general questions (no federalState)');
+    const generalQuestions = uniqueQuestions.filter(q => !q.federalState);
+    console.log(`Found ${generalQuestions.length} general questions`);
+    return generalQuestions;
+  };
+
+  useEffect(() => {
+    const filteredQuestions = getFilteredQuestions();
+    setQuestions(filteredQuestions);
+  }, [bundeslandId]);
 
   useEffect(() => {
     loadAnsweredQuestions();
-  }, []);
+  }, [bundeslandId]);
 
   useEffect(() => {
     saveAnsweredQuestions();
   }, [answeredQuestions]);
+
+  // Update questions when bundesland changes
   useEffect(() => {
-    const questionId = route.params?.questionId;
-    if (questionId) {
+    const filteredQuestions = getFilteredQuestions();
+    setQuestions(filteredQuestions);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setShowAnswer(false);
+    // Reset answered questions for new bundesland
+    setAnsweredQuestions({});
+  }, [bundeslandId]);
+
+  useEffect(() => {
+    if (questionId && questions.length > 0) {
       const index = questions.findIndex(q => q.id === questionId);
       if (index !== -1) {
         setCurrentQuestionIndex(index);
       }
     }
-  }, [route.params?.questionId]);
+  }, [questionId, questions]);
 
   const loadAnsweredQuestions = async () => {
     try {
-      const savedAnswers = await AsyncStorage.getItem('answeredQuestions');
+      // Use different storage key for each bundesland
+      const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+      const savedAnswers = await AsyncStorage.getItem(storageKey);
       if (savedAnswers) {
         setAnsweredQuestions(JSON.parse(savedAnswers));
+      } else {
+        setAnsweredQuestions({});
       }
     } catch (error) {
       console.log('Error loading answered questions:', error);
+      setAnsweredQuestions({});
     }
   };
 
   const saveAnsweredQuestions = async () => {
     try {
-      await AsyncStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions));
+      const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+      await AsyncStorage.setItem(storageKey, JSON.stringify(answeredQuestions));
     } catch (error) {
       console.log('Error saving answered questions:', error);
     }
   };
+
+  // Handle case when no questions are available
+  if (questions.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Feather name="chevron-left" size={24} color={colors.text.primary} />
+            <Text style={styles.backText}>Home</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>
+            {selectedState ? `${selectedState.name} Questions` : 'Practice Mode'}
+          </Text>
+          <View style={styles.headerRight} />
+        </View>
+        <View style={styles.emptyContainer}>
+          <Feather name="alert-circle" size={48} color={colors.text.secondary} />
+          <Text style={styles.emptyTitle}>No Questions Available</Text>
+          <Text style={styles.emptySubtitle}>
+            {selectedState
+              ? `No questions found for ${selectedState.name}. This Bundesland may not have specific questions yet.`
+              : 'No questions available for practice'}
+          </Text>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.buttonText}>Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -145,8 +234,8 @@ const PracticeModeScreen = () => {
       }
     })
     .activeOffsetX([-20, 20]);
-    
-    const handleQuestionChange = (index: number) => {
+
+  const handleQuestionChange = (index: number) => {
     setCurrentQuestionIndex(index);
     setSelectedAnswer(null);
     setShowAnswer(false);
@@ -160,116 +249,139 @@ const PracticeModeScreen = () => {
   };
 
   const getTranslatedText = (text: any) => {
-    if (!text || !selectedLanguage) return '';
+    if (!text || !selectedLanguage || selectedLanguage === 'off') return '';
     return text[selectedLanguage] || text.en || text.de;
   };
-  const { updateQuestionProgress } = useProgress(); // Add this inside the component
 
-const handleAnswerSelect = async (answerId: number) => {
-  const isCorrect = currentQuestion.correctAnswer === answerId;
-  
-  try {
-    // Only update progress if this answer hasn't been recorded before
-    if (!answeredQuestions[currentQuestion.id]) {
-      await updateQuestionProgress(currentQuestion.id, isCorrect);
+  const handleAnswerSelect = async (answerId: number) => {
+    const isCorrect = currentQuestion.correctAnswer === answerId;
+
+    try {
+      // Only update main progress context for general questions (no federalState)
+      if (!answeredQuestions[currentQuestion.id] && !bundeslandId) {
+        // This is a general question, update main progress
+        await updateQuestionProgress(currentQuestion.id, isCorrect);
+      }
+
+      // Update local state
+      setSelectedAnswer(answerId);
+      setAnsweredQuestions(prev => ({
+        ...prev,
+        [currentQuestion.id]: answerId
+      }));
+
+      // Save to AsyncStorage with bundesland-specific key
+      const updatedAnswers = {
+        ...answeredQuestions,
+        [currentQuestion.id]: answerId,
+      };
+      const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+      await AsyncStorage.setItem(storageKey, JSON.stringify(updatedAnswers));
+    } catch (error) {
+      console.error('Error updating progress:', error);
     }
-
-    // Update local state
-    setSelectedAnswer(answerId);
-    setAnsweredQuestions(prev => ({
-      ...prev,
-      [currentQuestion.id]: answerId
-    }));
-
-    // Save to AsyncStorage
-    const updatedAnswers = {
-      ...answeredQuestions,
-      [currentQuestion.id]: answerId,
-    };
-    await AsyncStorage.setItem('answeredQuestions', JSON.stringify(updatedAnswers));
-  } catch (error) {
-    console.error('Error updating progress:', error);
-  }
-};
+  };
 
   const getReadinessLevel = (isCorrect: boolean) => {
     return isCorrect ? colors.success : colors.error;
   };
-  const renderAnswerButton = (answer: any) => (
-    <TouchableOpacity
-      key={answer.id}
-      style={[
-        styles.answerButton,
-        answeredQuestions[currentQuestion.id] === answer.id && styles.selectedAnswer,
-        answeredQuestions[currentQuestion.id] === answer.id && 
-        isAnswerCorrect(answer.id) && styles.correctAnswer,
-        answeredQuestions[currentQuestion.id] === answer.id && 
-        !isAnswerCorrect(answer.id) && styles.wrongAnswer,
-      ]}
-      onPress={() => handleAnswerSelect(answer.id)}
-      disabled={answeredQuestions[currentQuestion.id] !== undefined}
-    >
-      <View style={styles.answerContent}>
-        <Text style={[
-          styles.answerText,
-          answeredQuestions[currentQuestion.id] === answer.id && 
-          styles.selectedAnswerText
-        ]}>
-          {answer.text.de}
-        </Text>
-        <Text style={styles.answerTranslation}>
-          {getTranslatedText(answer.text)}
-        </Text>
-      </View>
-      {answeredQuestions[currentQuestion.id] === answer.id && (
-        <Feather 
-          name={isAnswerCorrect(answer.id) ? "check-circle" : "x-circle"} 
-          size={20} 
-          color={getReadinessLevel(isAnswerCorrect(answer.id))} 
-        />
-      )}
-    </TouchableOpacity>
-  );
 
-  const handleBookmarkToggle = () => {
-    const currentQuestion = questions[currentQuestionIndex];
-    toggleBookmark(currentQuestion.id);
+  const renderAnswerButton = (answer: any) => {
+    const isSelected = answeredQuestions[currentQuestion.id] === answer.id;
+    const isCorrectAnswer = answer.id === currentQuestion.correctAnswer;
+    const hasAnswered = answeredQuestions[currentQuestion.id] !== undefined;
+
+    // Determine styling based on state
+    let buttonStyle = [styles.answerButton];
+    let iconName = null;
+    let iconColor = null;
+
+    if (hasAnswered) {
+      if (isSelected) {
+        // User selected this answer
+        if (isCorrectAnswer) {
+          // Selected and correct - green
+          buttonStyle.push(styles.correctAnswer);
+          iconName = "check-circle";
+          iconColor = colors.success;
+        } else {
+          // Selected but wrong - red
+          buttonStyle.push(styles.wrongAnswer);
+          iconName = "x-circle";
+          iconColor = colors.error;
+        }
+      } else if (isCorrectAnswer) {
+        // Not selected but this is the correct answer - show in green
+        buttonStyle.push(styles.correctAnswer);
+        iconName = "check-circle";
+        iconColor = colors.success;
+      }
+    }
+
+    return (
+      <TouchableOpacity
+        key={answer.id}
+        style={buttonStyle}
+        onPress={() => handleAnswerSelect(answer.id)}
+        disabled={hasAnswered}
+      >
+        <View style={styles.answerContent}>
+          <Text style={[
+            styles.answerText,
+            (isSelected || (hasAnswered && isCorrectAnswer)) && styles.selectedAnswerText
+          ]}>
+            {answer.text.de}
+          </Text>
+          {selectedLanguage !== 'off' && (
+            <Text style={styles.translationText}>
+              {getTranslatedText(answer.text)}
+            </Text>
+          )}
+        </View>
+        {iconName && (
+          <Feather name={iconName} size={20} color={iconColor} />
+        )}
+      </TouchableOpacity>
+    );
   };
 
-  const isAnswerCorrect = (answerId: number) => {
-    return answerId === currentQuestion.correctAnswer;
+  const handleBookmarkToggle = () => {
+    toggleBookmark(currentQuestion.id);
   };
 
   const handleResetProgress = () => {
     setAnsweredQuestions({});
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
-    AsyncStorage.removeItem('answeredQuestions');
+    const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+    AsyncStorage.removeItem(storageKey);
   };
 
   const handleShuffleQuestions = () => {
-    const shuffledQuestions = shuffleArray(originalQuestions);
+    const shuffledQuestions = shuffleArray(getFilteredQuestions());
     setQuestions(shuffledQuestions);
     setCurrentQuestionIndex(0);
     setAnsweredQuestions({});
     setSelectedAnswer(null);
-    AsyncStorage.removeItem('answeredQuestions');
+    const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+    AsyncStorage.removeItem(storageKey);
   };
-
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton} 
+          <TouchableOpacity
+            style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
             <Feather name="chevron-left" size={24} color={colors.text.primary} />
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Practice Mode</Text>
+          <Text style={styles.headerTitle}>
+            {selectedState ? `${selectedState.name} (${questions.length})` : 'Practice Mode'}
+          </Text>
           <View style={styles.headerRight} />
         </View>
 
@@ -283,66 +395,71 @@ const handleAnswerSelect = async (answerId: number) => {
           </Text>
         </View>
 
-        {/* Language Selector */}
-        <TouchableOpacity 
-          style={styles.languageSelector}
-          onPress={() => setShowLanguageModal(true)}
-        >
-          <Feather name="globe" size={20} color={colors.accent} />
-          <Text style={styles.languageText}>
-            {selectedLanguage?.toUpperCase() || 'EN'}
-          </Text>
-        </TouchableOpacity>
+        {/* Language Selector - Now includes OFF option */}
+        <View style={styles.languageSelectorContainer}>
+          <TouchableOpacity
+            style={styles.languageSelector}
+            onPress={() => setShowLanguageModal(true)}
+          >
+            <Text style={styles.translationLabel}>Translation:</Text>
+            <Text style={styles.languageText}>
+              {selectedLanguage === 'off' ? 'OFF' : selectedLanguage?.toUpperCase() || 'EN'}
+            </Text>
+            <Feather name="chevron-down" size={16} color={colors.accent} />
+          </TouchableOpacity>
+        </View>
 
         {/* Main Content */}
         <View style={styles.mainContent}>
           <GestureDetector gesture={panGesture}>
-            <ScrollView 
+            <ScrollView
               style={styles.scrollContainer}
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={false}
             >
               <View style={styles.questionCard}>
-              <View style={styles.questionHeader}>
+                <View style={styles.questionHeader}>
                   <View style={styles.questionHeaderButtons}>
-                    <TouchableOpacity 
-                      onPress={handleBookmarkToggle} 
+                    <TouchableOpacity
+                      onPress={handleBookmarkToggle}
                       style={styles.headerButton}
                     >
-                      <Ionicons 
+                      <Ionicons
                         name={currentQuestion && isBookmarked(currentQuestion.id) ? "bookmark" : "bookmark-outline"}
-                        size={24} 
-                        color={colors.accent} 
+                        size={24}
+                        color={colors.accent}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity 
-                      onPress={handleResetProgress} 
+                    <TouchableOpacity
+                      onPress={handleResetProgress}
                       style={styles.headerButton}
                     >
                       <Feather name="refresh-cw" size={20} color={colors.accent} />
                     </TouchableOpacity>
-                    <TouchableOpacity 
-                      onPress={handleShuffleQuestions} 
+                    <TouchableOpacity
+                      onPress={handleShuffleQuestions}
                       style={styles.headerButton}
                     >
                       <Feather name="shuffle" size={20} color={colors.accent} />
                     </TouchableOpacity>
                   </View>
                 </View>
+
                 <Text style={styles.questionText}>
                   {currentQuestion.question.de}
                 </Text>
 
-                
-                <Text style={styles.translationText}>
-                  {getTranslatedText(currentQuestion.question)}
-                </Text>
+                {selectedLanguage !== 'off' && (
+                  <Text style={styles.translationText}>
+                    {getTranslatedText(currentQuestion.question)}
+                  </Text>
+                )}
 
                 {/* Image if exists */}
                 {currentQuestion.image && (
-                  <QuestionImage 
+                  <QuestionImage
                     source={
-                      typeof currentQuestion.image === 'string' 
+                      typeof currentQuestion.image === 'string'
                         ? { uri: currentQuestion.image }
                         : currentQuestion.image
                     }
@@ -350,16 +467,33 @@ const handleAnswerSelect = async (answerId: number) => {
                 )}
 
                 <View style={styles.answersContainer}>
-                    {currentQuestion.answers.map(renderAnswerButton)}
-                  </View>
+                  {currentQuestion.answers.map(renderAnswerButton)}
+                </View>
 
                 {answeredQuestions[currentQuestion.id] !== undefined && (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.nextButton}
-                    onPress={handleNextQuestion}
+                    onPress={() => {
+                      if (currentQuestionIndex === questions.length - 1) {
+                        // On last question, go to previous if
+                        if (currentQuestionIndex > 0) {
+                          setCurrentQuestionIndex(prevIndex => prevIndex - 1);
+                          setSelectedAnswer(null);
+                        }
+                      } else {
+                        // On any other question, go to next
+                        handleNextQuestion();
+                      }
+                    }}
                   >
-                    <Text style={styles.nextButtonText}>Next Question</Text>
-                    <Feather name="chevron-right" size={20} color="white" />
+                    <Text style={styles.nextButtonText}>
+                      {currentQuestionIndex === questions.length - 1 ? 'Previous Question' : 'Next Question'}
+                    </Text>
+                    <Feather
+                      name={currentQuestionIndex === questions.length - 1 ? "chevron-left" : "chevron-right"}
+                      size={20}
+                      color="white"
+                    />
                   </TouchableOpacity>
                 )}
               </View>
@@ -370,51 +504,29 @@ const handleAnswerSelect = async (answerId: number) => {
         {/* Pagination */}
         <View style={styles.paginationWrapper}>
           <View style={styles.paginationContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.paginationArrow}
               onPress={() => handleQuestionChange(Math.max(0, currentQuestionIndex - 1))}
               disabled={currentQuestionIndex === 0}
             >
-              <Feather 
-                name="chevron-left" 
-                size={24} 
-                color={currentQuestionIndex === 0 ? colors.text.secondary : colors.accent} 
+              <Feather
+                name="chevron-left"
+                size={24}
+                color={currentQuestionIndex === 0 ? colors.text.secondary : colors.accent}
               />
             </TouchableOpacity>
-            
-            <View style={styles.paginationNumbers}>
-              {Array.from({ length: 5 }, (_, i) => {
-                const pageNum = currentQuestionIndex - 2 + i;
-                if (pageNum < 0 || pageNum >= questions.length) return null;
-                return (
-                  <TouchableOpacity
-                    key={pageNum}
-                    style={[
-                      styles.paginationButton,
-                      currentQuestionIndex === pageNum && styles.paginationButtonActive
-                    ]}
-                    onPress={() => handleQuestionChange(pageNum)}
-                  >
-                    <Text style={[
-                      styles.paginationButtonText,
-                      currentQuestionIndex === pageNum && styles.paginationButtonTextActive
-                    ]}>
-                      {pageNum + 1}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-
-            <TouchableOpacity 
+            <Text style={styles.paginationText}>
+              {currentQuestionIndex + 1} of {questions.length}
+            </Text>
+            <TouchableOpacity
               style={styles.paginationArrow}
               onPress={() => handleQuestionChange(Math.min(questions.length - 1, currentQuestionIndex + 1))}
               disabled={currentQuestionIndex === questions.length - 1}
             >
-              <Feather 
-                name="chevron-right" 
-                size={24} 
-                color={currentQuestionIndex === questions.length - 1 ? colors.text.secondary : colors.accent} 
+              <Feather
+                name="chevron-right"
+                size={24}
+                color={currentQuestionIndex === questions.length - 1 ? colors.text.secondary : colors.accent}
               />
             </TouchableOpacity>
           </View>
@@ -427,11 +539,7 @@ const handleAnswerSelect = async (answerId: number) => {
           animationType="slide"
           onRequestClose={() => setShowLanguageModal(false)}
         >
-          <TouchableOpacity 
-            style={styles.modalOverlay} 
-            activeOpacity={1} 
-            onPress={() => setShowLanguageModal(false)}
-          >
+          <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>Select Language</Text>
@@ -439,365 +547,354 @@ const handleAnswerSelect = async (answerId: number) => {
                   <Feather name="x" size={24} color={colors.text.primary} />
                 </TouchableOpacity>
               </View>
-              {languages.map((lang) => (
+              {languages.map((language) => (
                 <TouchableOpacity
-                  key={lang.code}
+                  key={language.code}
                   style={[
                     styles.languageOption,
-                    selectedLanguage === lang.code && styles.selectedLanguageOption
+                    selectedLanguage === language.code && styles.selectedLanguageOption
                   ]}
                   onPress={() => {
-                    setLanguage(lang.code as any);
+                    setLanguage(language.code);
                     setShowLanguageModal(false);
                   }}
                 >
                   <Text style={[
                     styles.languageOptionText,
-                    selectedLanguage === lang.code && styles.selectedLanguageOptionText
+                    selectedLanguage === language.code && styles.selectedLanguageOptionText
                   ]}>
-                    {lang.name}
+                    {language.name}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
-          </TouchableOpacity>
+          </View>
         </Modal>
       </SafeAreaView>
     </GestureHandlerRootView>
   );
-
 };
 
-
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#F5F1EA',
-    },
-    bookmarkContainer: {
-      position: 'absolute',
-      top: 16,
-      right: 16,
-      zIndex: 1,
-    },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      backgroundColor: 'white',
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    backButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 2,
-    },
-    backText: {
-      fontSize: 14,
-      color: colors.text.primary,
-    },
-    headerTitle: {
-      fontSize: 14,
-      fontWeight: '600',
-      color: colors.text.primary,
-    },
-    headerRight: {
-      width: 60,
-    },
-    progressContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 16,
-      backgroundColor: 'white',
-    },
-    progressBar: {
-      flex: 1,
-      height: 4,
-      backgroundColor: '#E5E5E5',
-      borderRadius: 2,
-      marginRight: 12,
-    },
-    progressFill: {
-      height: '100%',
-      backgroundColor: colors.accent,
-      borderRadius: 2,
-    },
-    progressText: {
-      fontSize: 12,
-      color: colors.text.secondary,
-      minWidth: 50,
-      textAlign: 'right',
-    },
-    languageSelector: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
-      padding: 12,
-      marginHorizontal: 16,
-      marginTop: 14,
-      backgroundColor: '#F8F9FA',
-      borderRadius: 8,
-    },
-    languageText: {
-      fontSize: 14,
-      color: colors.accent,
-      fontWeight: '500',
-    },
-    mainContent: {
-      flex: 1,
-      backgroundColor: '#F5F1EA',
-    },
-    scrollContainer: {
-      flex: 1,
-    },
-    scrollContent: {
-      flexGrow: 1,
-      padding: 16,
-    },
-    questionCard: {
-      position: 'relative',
-      backgroundColor: 'white',
-      borderRadius: 12,
-      padding: 16,
-      marginBottom: 14,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 3,
-      elevation: 3,
-    },
-    questionText: {
-      fontSize: 18,
-      fontWeight: '600',
-      color: colors.text.primary,
-      marginBottom: 6,
-    },
-    translationText: {
-      fontSize: 16,
-      color: colors.text.secondary,
-      marginBottom: 24,
-      fontStyle: 'italic',
-    },
-    imageContainer: {
-      marginVertical: 16,
-      height: 200,
-      backgroundColor: '#f8f8f8',
-      borderRadius: 8,
-      overflow: 'hidden',
-    },
-    questionImage: {
-      width: '100%',
-      height: '100%',
-    },
-    loadingContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#f8f8f8',
-    },
-    errorContainer: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#f8f8f8',
-    },
-    errorText: {
-      marginTop: 6,
-      color: colors.text.secondary,
-      fontSize: 12,
-    },
-    answersContainer: {
-      gap: 10,
-    },
-    answerButton: {
-      padding: 16,
-      backgroundColor: 'white',
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    selectedAnswer: {
-      backgroundColor: `${colors.accent}15`,
-      borderColor: colors.accent,
-    },
-    correctAnswer: {
-      backgroundColor: `${colors.success}15`,
-      borderColor: colors.success,
-    },
-    wrongAnswer: {
-      backgroundColor: `${colors.error}15`,
-      borderColor: colors.error,
-    },
-    answerText: {
-      fontSize: 14,
-      color: colors.text.primary,
-      marginBottom: 4,
-    },
-    selectedAnswerText: {
-      color: colors.accent,
-      fontWeight: '500',
-    },
-    answerTranslation: {
-      fontSize: 12,
-      color: colors.text.secondary,
-    },
-    nextButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: colors.accent,
-      padding: 16,
-      borderRadius: 8,
-      marginTop: 18,
-    },
-    nextButtonText: {
-      color: 'white',
-      fontSize: 14,
-      fontWeight: '500',
-      marginRight: 8,
-    },
-    paginationWrapper: {
-      backgroundColor: 'white',
-      paddingVertical: 10,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-    },
-    paginationContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-    },
-    paginationNumbers: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 6,
-    },
-    paginationButton: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F8F9FA',
-    },
-    paginationButtonActive: {
-      backgroundColor: colors.accent,
-    },
-    paginationButtonText: {
-      fontSize: 12,
-      color: colors.text.primary,
-    },
-    paginationButtonTextActive: {
-      color: 'white',
-      fontWeight: '500',
-    },
-    paginationArrow: {
-      width: 40,
-      height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'flex-end',
-    },
-    modalContent: {
-      backgroundColor: 'white',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      padding: 20,
-      maxHeight: '80%',
-    },
-    modalHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 18,
-      paddingBottom: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    modalTitle: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: colors.text.primary,
-    },
-    languageOption: {
-      padding: 16,
-      borderRadius: 8,
-      marginBottom: 6,
-      backgroundColor: '#F8F9FA',
-    },
-    selectedLanguageOption: {
-      backgroundColor: `${colors.accent}15`,
-    },
-    languageOptionText: {
-      fontSize: 14,
-      color: colors.text.primary,
-    },
-    selectedLanguageOptionText: {
-      color: colors.accent,
-      fontWeight: '500',
-    },
-    questionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      marginBottom: 16,
-    },
-    resetButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    resetButtonText: {
-      marginLeft: 4,
-      fontSize: 14,
-      color: colors.accent,
-    },
-    questionHeaderButtons: {
-      flexDirection: 'row',
-    },
-    headerButton: {
-      marginLeft: 12,
-    },
-    answerContent: {
-      flex: 1,
-    },
-    feedbackContainer: {
-      marginTop: 16,
-      padding: 16,
-      borderRadius: 8,
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-    feedbackCorrect: {
-      backgroundColor: `${colors.success}15`,
-    },
-    feedbackIncorrect: {
-      backgroundColor: `${colors.error}15`,
-    },
-    feedbackText: {
-      fontSize: 14,
-      fontWeight: '500',
-    },
-  });
-  
-  export default PracticeModeScreen
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  backText: {
+    fontSize: 14,
+    color: colors.text.primary,
+  },
+  headerTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text.primary,
+    textAlign: 'center',
+    flex: 1,
+  },
+  headerRight: {
+    width: 60,
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  progressBar: {
+    flex: 1,
+    height: 4,
+    backgroundColor: colors.border,
+    borderRadius: 2,
+    marginRight: 12,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.accent,
+    borderRadius: 2,
+  },
+  progressText: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    fontWeight: '500',
+  },
+  languageSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  // languageSelector: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   gap: 6,
+  //   paddingHorizontal: 12,
+  //   paddingVertical: 6,
+  //   backgroundColor: colors.background,
+  //   borderRadius: 6,
+  //   borderWidth: 1,
+  //   borderColor: colors.border,
+  //   alignSelf: 'center',
+  // },
+  languageText: {
+    fontSize: 12,
+    color: colors.accent,
+    fontWeight: '500',
+  },
+  mainContent: {
+    flex: 1,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  questionCard: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  questionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  questionHeaderButtons: {
+    flexDirection: 'row',
+  },
+  headerButton: {
+    marginLeft: 12,
+  },
+  questionText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: colors.text.primary,
+    marginBottom: 8,
+    lineHeight: 26,
+  },
+  translationText: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+  imageContainer: {
+    position: 'relative',
+    marginBottom: 20,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -12 }, { translateY: -12 }],
+    zIndex: 1,
+  },
+  questionImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+  },
+  errorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 200,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+  },
+  errorText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+  answersContainer: {
+    gap: 12,
+  },
+  answerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    backgroundColor: 'white',
+  },
+  selectedAnswer: {
+    borderColor: colors.accent,
+    backgroundColor: `${colors.accent}05`,
+  },
+  correctAnswer: {
+    borderColor: colors.success,
+    backgroundColor: `${colors.success}10`,
+  },
+  wrongAnswer: {
+    borderColor: colors.error,
+    backgroundColor: `${colors.error}10`,
+  },
+  answerContent: {
+    flex: 1,
+  },
+  answerText: {
+    fontSize: 16,
+    color: colors.text.primary,
+    marginBottom: 4,
+  },
+  selectedAnswerText: {
+    fontWeight: '500',
+  },
+  answerTranslationContainer: {
+    marginTop: 4,
+  },
+  answerTranslationLabel: {
+    fontSize: 10,
+    color: colors.text.secondary,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    marginBottom: 2,
+  },
+  answerTranslationText: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    fontStyle: 'italic',
+    lineHeight: 16,
+  },
+  nextButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accent,
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 20,
+    gap: 8,
+  },
+  nextButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  paginationWrapper: {
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  paginationArrow: {
+    padding: 8,
+  },
+  paginationText: {
+    fontSize: 14,
+    color: colors.text.primary,
+    fontWeight: '500',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text.primary,
+  },
+  languageOption: {
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 6,
+    backgroundColor: '#F8F9FA',
+  },
+  selectedLanguageOption: {
+    backgroundColor: `${colors.accent}15`,
+  },
+  languageOptionText: {
+    fontSize: 14,
+    color: colors.text.primary,
+  },
+  selectedLanguageOptionText: {
+    color: colors.accent,
+    fontWeight: '500',
+  },
+  // Empty state styles
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  primaryButton: {
+    backgroundColor: colors.accent,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
+
+export default PracticeModeScreen;

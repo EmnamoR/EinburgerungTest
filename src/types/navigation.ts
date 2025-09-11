@@ -6,7 +6,7 @@ import { TestState } from './test';
 export type RootStackParamList = {
   Home: undefined;
   TestSimulation: undefined;
-  PracticeMode: { questionId: string } | undefined;
+  PracticeMode: { bundesland?: string; questionId?: string } | undefined;
   BookmarkedQuestions: undefined;
   Settings: undefined;
   SavedQuestions: undefined;
@@ -27,3 +27,4 @@ export type BookmarkedQuestionsScreenNavigationProp = NativeStackNavigationProp<
 export type QuestionDetailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'QuestionDetail'>;
 export type StateSelectionScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'StateSelection'>;
 export type LanguageSelectionScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'LanguageSelection'>;
+export type HistoricalDatesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'HistoricalDates'>;

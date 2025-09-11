@@ -1,118 +1,109 @@
 // src/context/ProgressContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface QuestionProgress {
+  questionId: string;
   isCorrect: boolean;
-  timestamp: string;
-  attempts: number;
-}
-
-interface Progress {
-  answeredQuestions: {
-    [questionId: string]: QuestionProgress;
-  };
-  testResults: any[];
-  lastUpdated: string;
+  timestamp: number;
 }
 
 interface ProgressContextType {
-  progress: Progress;
+  questionProgress: Record<string, QuestionProgress>;
   updateQuestionProgress: (questionId: string, isCorrect: boolean) => Promise<void>;
   getMasteredCount: () => number;
   getRemainingCount: () => number;
   getProgress: () => number;
   reloadProgress: () => Promise<void>;
-  hasAnsweredQuestion: (questionId: string) => boolean;
+  clearAllProgress: () => Promise<void>;
 }
-
-const PROGRESS_KEY = 'testProgress';
-const TOTAL_QUESTIONS = 300;
-
-const defaultProgress: Progress = {
-  answeredQuestions: {},
-  testResults: [],
-  lastUpdated: new Date().toISOString(),
-};
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
-export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [progress, setProgress] = useState<Progress>(defaultProgress);
+const PROGRESS_STORAGE_KEY = 'questionProgress';
+const TOTAL_QUESTIONS = 300;
+
+export const ProgressProvider = ({ children }: { children: ReactNode }) => {
+  const [questionProgress, setQuestionProgress] = useState<Record<string, QuestionProgress>>({});
+
+  useEffect(() => {
+    loadProgress();
+  }, []);
 
   const loadProgress = async () => {
     try {
-      const saved = await AsyncStorage.getItem(PROGRESS_KEY);
-      if (saved) {
-        setProgress(JSON.parse(saved));
+      const savedProgress = await AsyncStorage.getItem(PROGRESS_STORAGE_KEY);
+      if (savedProgress) {
+        const parsedProgress = JSON.parse(savedProgress);
+        setQuestionProgress(parsedProgress);
       }
     } catch (error) {
       console.error('Error loading progress:', error);
     }
   };
 
-  useEffect(() => {
-    loadProgress();
-  }, []);
-
-  const hasAnsweredQuestion = (questionId: string) => {
-    return !!progress.answeredQuestions[questionId];
-  };
-
-  const updateQuestionProgress = async (questionId: string, isCorrect: boolean) => {
+  const saveProgress = async (progress: Record<string, QuestionProgress>) => {
     try {
-      const existingProgress = progress.answeredQuestions[questionId];
-      
-      // If the question was already answered correctly, don't update the progress
-      if (existingProgress?.isCorrect) {
-        return;
-      }
-
-      const newProgress = {
-        ...progress,
-        answeredQuestions: {
-          ...progress.answeredQuestions,
-          [questionId]: {
-            isCorrect,
-            timestamp: new Date().toISOString(),
-            attempts: (existingProgress?.attempts || 0) + 1
-          }
-        },
-        lastUpdated: new Date().toISOString()
-      };
-
-      await AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(newProgress));
-      setProgress(newProgress);
+      await AsyncStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
     } catch (error) {
-      console.error('Error updating progress:', error);
+      console.error('Error saving progress:', error);
     }
   };
 
+  const updateQuestionProgress = async (questionId: string, isCorrect: boolean) => {
+    const newProgress = {
+      ...questionProgress,
+      [questionId]: {
+        questionId,
+        isCorrect,
+        timestamp: Date.now(),
+      },
+    };
+    
+    setQuestionProgress(newProgress);
+    await saveProgress(newProgress);
+  };
+
   const getMasteredCount = () => {
-    return Object.values(progress.answeredQuestions).filter(q => q.isCorrect).length;
+    return Object.values(questionProgress).filter(progress => progress.isCorrect).length;
   };
 
   const getRemainingCount = () => {
-    return TOTAL_QUESTIONS - getMasteredCount();
+    return TOTAL_QUESTIONS - Object.keys(questionProgress).length;
   };
 
   const getProgress = () => {
-    const masteredCount = getMasteredCount();
-    return Math.round((masteredCount / TOTAL_QUESTIONS) * 100);
+    const totalAnswered = Object.keys(questionProgress).length;
+    if (totalAnswered === 0) return 0;
+    
+    const correctAnswers = getMasteredCount();
+    return Math.round((correctAnswers / TOTAL_QUESTIONS) * 100);
   };
 
-  const contextValue: ProgressContextType = {
-    progress,
-    updateQuestionProgress,
-    getMasteredCount,
-    getRemainingCount,
-    getProgress,
-    reloadProgress: loadProgress,
-    hasAnsweredQuestion
+  const reloadProgress = async () => {
+    await loadProgress();
+  };
+
+  const clearAllProgress = async () => {
+    try {
+      await AsyncStorage.removeItem(PROGRESS_STORAGE_KEY);
+      setQuestionProgress({});
+    } catch (error) {
+      console.error('Error clearing progress:', error);
+      throw error;
+    }
   };
 
   return (
-    <ProgressContext.Provider value={contextValue}>
+    <ProgressContext.Provider value={{
+      questionProgress,
+      updateQuestionProgress,
+      getMasteredCount,
+      getRemainingCount,
+      getProgress,
+      reloadProgress,
+      clearAllProgress,
+    }}>
       {children}
     </ProgressContext.Provider>
   );

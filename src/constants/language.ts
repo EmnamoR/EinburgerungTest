@@ -1,4 +1,5 @@
 export const languages = [
+    { code: 'off', name: 'OFF (No Translation)' },
     { code: 'en', name: 'English', nativeName: 'English' },
     { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
     { code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
