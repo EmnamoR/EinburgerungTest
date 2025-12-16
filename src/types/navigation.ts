@@ -11,6 +11,7 @@ export type RootStackParamList = {
   Settings: undefined;
   SavedQuestions: undefined;
   HistoricalDates: undefined;
+  PremiumScreen: undefined;
   QuestionDetail: { questionId: string };
   StateSelection: undefined;
   LanguageSelection: undefined;
@@ -28,3 +29,4 @@ export type QuestionDetailScreenNavigationProp = NativeStackNavigationProp<RootS
 export type StateSelectionScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'StateSelection'>;
 export type LanguageSelectionScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'LanguageSelection'>;
 export type HistoricalDatesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'HistoricalDates'>;
+export type PremiumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PremiumScreen'>;

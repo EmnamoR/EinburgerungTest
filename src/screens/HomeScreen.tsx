@@ -1,6 +1,6 @@
 // src/screens/HomeScreen.tsx
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, FlatList } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, FlatList, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
@@ -16,18 +16,55 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
   const { bookmarkedQuestions } = useBookmarks();
-  const { getMasteredCount, getRemainingCount, getProgress, reloadProgress } = useProgress();
+  const { getMasteredCount, getIncorrectCount, getRemainingCount, getProgress, reloadProgress } = useProgress();
 
   const [selectedBundesland, setSelectedBundesland] = useState<GermanState | null>(null);
   const [showBundeslandModal, setShowBundeslandModal] = useState(false);
   const [bundeslandCompleted, setBundeslandCompleted] = useState(0);
+  const [isPremium, setIsPremium] = useState(false);
 
   const [stats, setStats] = useState({
     mastered: 0,
+    incorrect: 0,
     remaining: 300,
     starred: bookmarkedQuestions.length || 0,
     progress: 0,
   });
+
+  // Pulse animation for readiness icon
+  const pulse = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, { toValue: 1.05, duration: 1200, useNativeDriver: true }),
+        Animated.timing(pulse, { toValue: 1.0, duration: 1200, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [pulse]);
+
+  // Load premium status
+  useEffect(() => {
+    loadPremiumStatus();
+  }, []);
+
+  const loadPremiumStatus = async () => {
+    try {
+      const premiumStatus = await AsyncStorage.getItem('isPremium');
+      setIsPremium(premiumStatus === 'true');
+    } catch (error) {
+      console.log('Error loading premium status:', error);
+    }
+  };
+
+  // Reload premium status when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadPremiumStatus();
+    }, [])
+  );
 
   // Category definitions
   const categories = [
@@ -37,6 +74,7 @@ export const HomeScreen = () => {
       subtitle: 'Political system, democracy, elections',
       icon: 'users',
       color: colors.primary,
+      isPremium: true,
       filter: (q: any) => q.category === 'politics'
     },
     {
@@ -45,6 +83,7 @@ export const HomeScreen = () => {
       subtitle: 'Important historical events and periods',
       icon: 'book-open',
       color: '#8B5A2B',
+      isPremium: true,
       filter: (q: any) => q.category === 'history'
     },
     {
@@ -53,6 +92,7 @@ export const HomeScreen = () => {
       subtitle: 'Social norms, culture, daily life',
       icon: 'home',
       color: '#2E7D32',
+      isPremium: true,
       filter: (q: any) => q.category === 'society' || q.category === 'culture'
     },
     {
@@ -61,6 +101,7 @@ export const HomeScreen = () => {
       subtitle: 'Historical remembrance and education',
       icon: 'clock',
       color: '#5D4037',
+      isPremium: true,
       filter: (q: any) => q.category === 'holocaust' || 
                          (q.category === 'history' && 
                           (q.question?.de?.toLowerCase().includes('holocaust') ||
@@ -105,6 +146,7 @@ export const HomeScreen = () => {
   const updateStats = () => {
     setStats({
       mastered: getMasteredCount(),
+      incorrect: getIncorrectCount(),
       remaining: getRemainingCount(),
       starred: bookmarkedQuestions.length,
       progress: getProgress(),
@@ -129,6 +171,7 @@ export const HomeScreen = () => {
         // Update general stats
         setStats({
           mastered: getMasteredCount(),
+          incorrect: getIncorrectCount(),
           remaining: getRemainingCount(),
           starred: bookmarkedQuestions.length,
           progress: getProgress(),
@@ -142,7 +185,7 @@ export const HomeScreen = () => {
       };
 
       updateAllData();
-    }, [getMasteredCount, getRemainingCount, getProgress, reloadProgress, bookmarkedQuestions.length, selectedBundesland])
+    }, [getMasteredCount, getIncorrectCount, getRemainingCount, getProgress, reloadProgress, bookmarkedQuestions.length, selectedBundesland])
   );
 
   const getReadinessLevel = (progress: number) => {
@@ -176,11 +219,35 @@ export const HomeScreen = () => {
     setShowBundeslandModal(false);
   };
 
+  const showPremiumModal = () => {
+    // Navigate to premium upgrade screen
+    navigation.navigate('PremiumScreen');
+  };
+
   const handleCategoryPress = (category: any) => {
-    // Navigate to a category-specific practice mode
-    // For now, we'll use the existing PracticeMode with a category parameter
-    // You might want to create a dedicated CategoryPracticeScreen later
+    if (category.isPremium && !isPremium) {
+      showPremiumModal();
+      return;
+    }
     navigation.navigate('PracticeMode', { category: category.id });
+  };
+
+  const handleBundeslandPractice = () => {
+    if (!isPremium) {
+      showPremiumModal();
+      return;
+    }
+    if (selectedBundesland) {
+      navigation.navigate('PracticeMode', { bundesland: selectedBundesland.id });
+    }
+  };
+
+  const handleTestSimulation = () => {
+    if (!isPremium) {
+      showPremiumModal();
+      return;
+    }
+    navigation.navigate('TestSimulation');
   };
 
   const renderBundeslandItem = ({ item }: { item: GermanState }) => (
@@ -214,14 +281,27 @@ export const HomeScreen = () => {
   const renderCategoryCard = (category: any) => (
     <TouchableOpacity 
       key={category.id}
-      style={[styles.categoryCard, { borderColor: `${category.color}30` }]}
+      style={[
+        styles.categoryCard, 
+        { borderColor: `${category.color}30` },
+        category.isPremium && !isPremium && styles.premiumDisabled
+      ]}
       onPress={() => handleCategoryPress(category)}
     >
       <View style={[styles.categoryIcon, { backgroundColor: `${category.color}15` }]}>
         <Feather name={category.icon} size={20} color={category.color} />
       </View>
       <View style={styles.categoryContent}>
-        <Text style={styles.categoryTitle}>{category.title}</Text>
+        <View style={styles.categoryTitleRow}>
+          <Text style={styles.categoryTitle}>{category.title}</Text>
+          {category.isPremium && (
+            <Feather 
+              name={isPremium ? "star" : "lock"} 
+              size={14} 
+              color={isPremium ? "#FFD700" : "#999"} 
+            />
+          )}
+        </View>
         <Text style={styles.categorySubtitle}>{category.subtitle}</Text>
         <Text style={[styles.categoryCount, { color: category.color }]}>
           {getCategoryCount(category.filter)} questions
@@ -234,10 +314,15 @@ export const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Leben in Deutschland</Text>
+        <Text style={styles.headerTitle}>🇩🇪 Leben in Deutschland</Text>
         <View style={styles.headerActions}>
+          {/* {!isPremium && (
+            <TouchableOpacity onPress={showPremiumModal} style={styles.premiumButton}>
+              <Feather name="star" size={20} color="#FFD700" />
+              <Text style={styles.premiumButtonText}>Premium</Text>
+            </TouchableOpacity>
+          )} */}
           <TouchableOpacity onPress={() => {
-            // For now, just log since LanguageSelection screen doesn't exist
             console.log('Language selection pressed - screen not implemented');
           }}>
             <Feather name="globe" size={24} color={colors.primary} />
@@ -248,11 +333,24 @@ export const HomeScreen = () => {
         </View>
       </View>
 
+      {/* German Flag Ribbon */}
+      <View style={styles.ribbonContainer}>
+        <View style={styles.ribbonStripeBlack} />
+        <View style={styles.ribbonStripeRed} />
+        <View style={styles.ribbonStripeGold} />
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
+        {/* Brandenburg Gate Header */}
+        <View style={styles.brandenburgContainer}>
+          <Text style={styles.brandenburgGate}>🏛️</Text>
+          <Text style={styles.brandenburgText}>German Citizenship Test Preparation</Text>
+        </View>
+
         {/* Progress Card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
@@ -284,7 +382,7 @@ export const HomeScreen = () => {
             <View style={styles.statBox}>
               <Text style={[
                 styles.statNumber,
-                { color: colors.primary }
+                { color: colors.success }
               ]}>
                 {stats.mastered}
               </Text>
@@ -293,7 +391,16 @@ export const HomeScreen = () => {
             <View style={styles.statBox}>
               <Text style={[
                 styles.statNumber,
-                { color: colors.primary }
+                { color: colors.warning }
+              ]}>
+                {stats.incorrect}
+              </Text>
+              <Text style={styles.statLabel}>Incorrect</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={[
+                styles.statNumber,
+                { color: colors.text.secondary }
               ]}>
                 {stats.remaining}
               </Text>
@@ -302,7 +409,7 @@ export const HomeScreen = () => {
             <View style={styles.statBox}>
               <Text style={[
                 styles.statNumber,
-                { color: colors.primary }
+                { color: colors.accent }
               ]}>
                 {stats.starred}
               </Text>
@@ -310,15 +417,14 @@ export const HomeScreen = () => {
             </View>
           </View>
 
-          <View style={[
-            styles.readinessMessage,
-            { backgroundColor: `${readinessInfo.color}10` }
-          ]}>
-            <Feather
-              name={readinessInfo.icon as any}
-              size={16}
-              color={readinessInfo.color}
-            />
+          <View style={styles.readinessMessage}>
+            <Animated.View style={{ transform: [{ scale: pulse }] }}>
+              <Feather
+                name={readinessInfo.icon as any}
+                size={16}
+                color={readinessInfo.color}
+              />
+            </Animated.View>
             <Text style={[styles.readinessText, { color: readinessInfo.color }]}>
               {readinessInfo.message}
             </Text>
@@ -328,11 +434,13 @@ export const HomeScreen = () => {
         {/* Practice Mode Card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Feather name="book" size={20} color={colors.primary} />
-            <Text style={styles.cardTitle}>Practice Mode</Text>
+            <View style={styles.cardTitleContainer}>
+              <Feather name="book" size={20} color={colors.primary} />
+              <Text style={styles.cardTitle}>Practice Mode</Text>
+            </View>
           </View>
           <Text style={styles.cardSubtitle}>
-            Study all 300 questions at your own pace
+            Study all {questions.length} questions at your own pace
           </Text>
           <TouchableOpacity
             style={styles.secondaryButton}
@@ -348,6 +456,12 @@ export const HomeScreen = () => {
             <View style={styles.cardTitleContainer}>
               <Feather name="map" size={20} color={colors.primary} />
               <Text style={styles.cardTitle}>Bundesland Questions</Text>
+              <Feather 
+                name={isPremium ? "star" : "lock"} 
+                size={16} 
+                color={isPremium ? "#FFD700" : "#999"} 
+                style={styles.premiumIcon} 
+              />
             </View>
           </View>
           <Text style={styles.cardSubtitle}>
@@ -355,8 +469,11 @@ export const HomeScreen = () => {
           </Text>
 
           <TouchableOpacity
-            style={styles.bundeslandSelector}
-            onPress={() => setShowBundeslandModal(true)}
+            style={[
+              styles.bundeslandSelector,
+              !isPremium && styles.premiumDisabled
+            ]}
+            onPress={() => isPremium ? setShowBundeslandModal(true) : showPremiumModal()}
           >
             <View style={styles.bundeslandSelectorContent}>
               <Feather name="map-pin" size={18} color={colors.primary} />
@@ -367,7 +484,7 @@ export const HomeScreen = () => {
             <Feather name="chevron-down" size={20} color={colors.text.secondary} />
           </TouchableOpacity>
 
-          {selectedBundesland && (
+          {selectedBundesland && isPremium && (
             <View style={styles.selectedBundeslandInfo}>
               <View style={styles.bundeslandStatsContainer}>
                 <View style={styles.statBox}>
@@ -390,11 +507,7 @@ export const HomeScreen = () => {
 
               <TouchableOpacity
                 style={styles.primaryButton}
-                onPress={() => {
-                  if (selectedBundesland) {
-                    navigation.navigate('PracticeMode', { bundesland: selectedBundesland.id });
-                  }
-                }}
+                onPress={handleBundeslandPractice}
               >
                 <Text style={styles.buttonText}>
                   Practice {selectedBundesland.name} Questions
@@ -402,23 +515,50 @@ export const HomeScreen = () => {
               </TouchableOpacity>
             </View>
           )}
+
+          {!isPremium && (
+            <View style={styles.premiumPrompt}>
+              <Text style={styles.premiumPromptText}>
+                Unlock Bundesland-specific questions with Premium
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Test Simulation Card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            {/* <Feather name="clock" size={24} color={colors.primary} /> */}
-            <Text style={styles.cardTitle}>Simulate Test</Text>
+            <View style={styles.cardTitleContainer}>
+              <Feather name="clock" size={24} color={colors.primary} />
+              <Text style={styles.cardTitle}>Simulate Test</Text>
+              <Feather 
+                name={isPremium ? "star" : "lock"} 
+                size={16} 
+                color={isPremium ? "#FFD700" : "#999"} 
+                style={styles.premiumIcon} 
+              />
+            </View>
           </View>
           <Text style={styles.cardSubtitle}>
             33 questions • 60 minutes • 17 correct to pass
           </Text>
           <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => navigation.navigate('TestSimulation')}
+            style={[
+              styles.primaryButton,
+              !isPremium && styles.premiumDisabled
+            ]}
+            onPress={handleTestSimulation}
           >
             <Text style={styles.buttonText}>Start Test Simulation</Text>
           </TouchableOpacity>
+          
+          {!isPremium && (
+            <View style={styles.premiumPrompt}>
+              <Text style={styles.premiumPromptText}>
+                Premium feature - Simulate real test conditions
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Quick Actions */}
@@ -448,6 +588,12 @@ export const HomeScreen = () => {
             <View style={styles.cardTitleContainer}>
               <Feather name="grid" size={20} color={colors.primary} />
               <Text style={styles.cardTitle}>Study by Category</Text>
+              <Feather 
+                name={isPremium ? "star" : "lock"} 
+                size={16} 
+                color={isPremium ? "#FFD700" : "#999"} 
+                style={styles.premiumIcon} 
+              />
             </View>
           </View>
           <Text style={styles.cardSubtitle}>
@@ -457,6 +603,14 @@ export const HomeScreen = () => {
           <View style={styles.categoriesContainer}>
             {categories.map(renderCategoryCard)}
           </View>
+
+          {!isPremium && (
+            <View style={styles.premiumPrompt}>
+              <Text style={styles.premiumPromptText}>
+                Unlock category-based study with Premium
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
@@ -515,23 +669,97 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: colors.text.primary,
+    letterSpacing: 0.2,
   },
   headerActions: {
     flexDirection: 'row',
     gap: 14,
+    alignItems: 'center',
+  },
+  premiumButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF8E1',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 4,
+  },
+  premiumButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#F57C00',
+  },
+  ribbonContainer: {
+    height: 9,
+    width: '100%',
+    flexDirection: 'column',
+  },
+  ribbonStripeBlack: { 
+    flex: 1, 
+    backgroundColor: '#000000' 
+  },
+  ribbonStripeRed: { 
+    flex: 1, 
+    backgroundColor: '#DD0000' 
+  },
+  ribbonStripeGold: { 
+    flex: 1, 
+    backgroundColor: '#FFCE00' 
+  },
+  brandenburgContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+  },
+  brandenburgGate: {
+    fontSize: 32,
+    marginBottom: 8,
+  },
+  brandenburgText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.text.primary,
+    textAlign: 'center',
+    letterSpacing: 0.2,
+  },
+  premiumBadgeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    backgroundColor: '#FFF8E1',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    gap: 4,
+  },
+  premiumBadgeHeaderText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#F57C00',
+    letterSpacing: 0.5,
   },
   card: {
     backgroundColor: 'white',
     borderRadius: 12,
     padding: 16,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -543,6 +771,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    flex: 1,
   },
   cardTitle: {
     fontSize: 16,
@@ -560,15 +789,14 @@ const styles = StyleSheet.create({
     color: colors.accent,
   },
   progressBar: {
-    height: 4,
-    backgroundColor: '#E5E5E5',
-    borderRadius: 2,
+    height: 6,
+    backgroundColor: '#ECEFF4',
+    borderRadius: 3,
     marginVertical: 12,
   },
   progressFill: {
     height: '100%',
-    backgroundColor: colors.accent,
-    borderRadius: 2,
+    borderRadius: 3,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -580,19 +808,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F8F9FA',
     borderRadius: 8,
-    padding: 12,
-    marginHorizontal: 4,
+    padding: 8,
+    marginHorizontal: 2,
   },
   statNumber: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    color: colors.accent,
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 10,
+    fontSize: 9,
     color: colors.text.secondary,
-    // textAlign: 'center',
+    textAlign: 'center',
   },
   primaryButton: {
     backgroundColor: colors.primary,
@@ -622,7 +849,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#FFF5F5',
+    backgroundColor: '#F7FFF8',
     borderRadius: 8,
     padding: 12,
     marginTop: 12,
@@ -643,13 +870,12 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
   },
   quickActionTitle: {
     fontSize: 14,
@@ -672,9 +898,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#F7F9FC',
     borderRadius: 12,
     borderWidth: 1,
+    borderColor: '#E6EAF0',
   },
   categoryIcon: {
     width: 40,
@@ -687,11 +914,17 @@ const styles = StyleSheet.create({
   categoryContent: {
     flex: 1,
   },
+  categoryTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
   categoryTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: colors.text.primary,
-    marginBottom: 2,
+    flex: 1,
   },
   categorySubtitle: {
     fontSize: 12,
@@ -702,9 +935,25 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '500',
   },
-  // premiumIcon: {
-  //   marginLeft: 6,
-  // },
+  premiumIcon: {
+    marginLeft: 6,
+  },
+  premiumDisabled: {
+    opacity: 0.6,
+  },
+  premiumPrompt: {
+    marginTop: 12,
+    padding: 12,
+    backgroundColor: '#FFF8E1',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  premiumPromptText: {
+    fontSize: 12,
+    color: '#F57C00',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
   // Bundesland-specific styles
   bundeslandSelector: {
     flexDirection: 'row',
@@ -729,10 +978,10 @@ const styles = StyleSheet.create({
   selectedBundeslandInfo: {
     marginTop: 16,
     padding: 16,
-    backgroundColor: `${colors.primary}08`,
+    backgroundColor: `${colors.primary}0D`,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: `${colors.primary}20`,
+    borderColor: `${colors.primary}26`,
   },
   bundeslandStatsContainer: {
     flexDirection: 'row',

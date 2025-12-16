@@ -12,6 +12,7 @@ interface ProgressContextType {
   questionProgress: Record<string, QuestionProgress>;
   updateQuestionProgress: (questionId: string, isCorrect: boolean) => Promise<void>;
   getMasteredCount: () => number;
+  getIncorrectCount: () => number; // Add this line
   getRemainingCount: () => number;
   getProgress: () => number;
   reloadProgress: () => Promise<void>;
@@ -68,6 +69,11 @@ export const ProgressProvider = ({ children }: { children: ReactNode }) => {
     return Object.values(questionProgress).filter(progress => progress.isCorrect).length;
   };
 
+  // Add this missing function
+  const getIncorrectCount = () => {
+    return Object.values(questionProgress).filter(progress => !progress.isCorrect).length;
+  };
+
   const getRemainingCount = () => {
     return TOTAL_QUESTIONS - Object.keys(questionProgress).length;
   };
@@ -99,6 +105,7 @@ export const ProgressProvider = ({ children }: { children: ReactNode }) => {
       questionProgress,
       updateQuestionProgress,
       getMasteredCount,
+      getIncorrectCount, // Add this line
       getRemainingCount,
       getProgress,
       reloadProgress,

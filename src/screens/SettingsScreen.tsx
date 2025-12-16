@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// src/screens/SettingsScreen.tsx
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +17,7 @@ export const SettingsScreen = () => {
   const { clearAllBookmarks } = useBookmarks();
   const { clearAllProgress } = useProgress();
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   const languages = [
     { code: 'off', name: 'OFF (No Translation)' },
@@ -27,6 +29,28 @@ export const SettingsScreen = () => {
     { code: 'pl', name: 'Polski' },
     { code: 'fa', name: 'فارسی' },
   ];
+
+  // Load premium status on component mount
+  useEffect(() => {
+    loadPremiumStatus();
+  }, []);
+
+  const loadPremiumStatus = async () => {
+    try {
+      const premiumStatus = await AsyncStorage.getItem('isPremium');
+      setIsPremium(premiumStatus === 'true');
+    } catch (error) {
+      console.log('Error loading premium status:', error);
+    }
+  };
+
+  // Debug toggle for premium (remove in production)
+  const togglePremiumDebug = async () => {
+    const newStatus = !isPremium;
+    setIsPremium(newStatus);
+    await AsyncStorage.setItem('isPremium', newStatus.toString());
+    Alert.alert('Debug', `Premium status changed to: ${newStatus ? 'Active' : 'Inactive'}`);
+  };
 
   const handleResetProgress = () => {
     Alert.alert(
@@ -73,6 +97,29 @@ export const SettingsScreen = () => {
     );
   };
 
+  const handlePremiumAction = () => {
+    if (isPremium) {
+      // Show premium management options
+      Alert.alert(
+        'Premium Active',
+        'Your premium subscription is active. You have access to all premium features.',
+        [
+          {
+            text: 'Manage Subscription',
+            onPress: () => navigation.navigate('PremiumScreen')
+          },
+          {
+            text: 'OK',
+            style: 'cancel'
+          }
+        ]
+      );
+    } else {
+      // Navigate to purchase screen
+      navigation.navigate('PremiumScreen');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -88,6 +135,43 @@ export const SettingsScreen = () => {
       </View>
 
       <View style={styles.content}>
+        {/* Premium Settings */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Premium</Text>
+          
+          <TouchableOpacity
+            style={styles.settingItem}
+            onPress={handlePremiumAction}
+          >
+            <View style={styles.settingLeft}>
+              <Feather 
+                name="star" 
+                size={20} 
+                color={isPremium ? "#FFD700" : colors.text.secondary} 
+              />
+              <Text style={styles.settingText}>
+                {isPremium ? 'Premium Active' : 'Upgrade to Premium'}
+              </Text>
+            </View>
+            <View style={styles.settingRight}>
+              {isPremium ? (
+                <View style={styles.premiumBadge}>
+                  <Text style={styles.premiumBadgeText}>ACTIVE</Text>
+                </View>
+              ) : (
+                <View style={styles.upgradeBadge}>
+                  <Text style={styles.upgradeBadgeText}>UPGRADE</Text>
+                </View>
+              )}
+              <Feather
+                name="chevron-right"
+                size={20}
+                color={colors.text.secondary}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* Language Settings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Language Settings</Text>
@@ -122,7 +206,7 @@ export const SettingsScreen = () => {
             onPress={handleResetProgress}
           >
             <View style={styles.settingLeft}>
-              <Feather name="refresh-ccw" size={20} color={colors.accent} />
+              <Feather name="rotate-ccw" size={20} color={colors.accent} />
               <Text style={styles.settingText}>Reset All Progress</Text>
             </View>
             <Feather
@@ -132,6 +216,26 @@ export const SettingsScreen = () => {
             />
           </TouchableOpacity>
         </View>
+
+        {/* Debug Section (remove in production) */}
+        {__DEV__ && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Debug (Development Only)</Text>
+            
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={togglePremiumDebug}
+            >
+              <View style={styles.settingLeft}>
+                <Feather name="settings" size={20} color={colors.accent} />
+                <Text style={styles.settingText}>Toggle Premium Status</Text>
+              </View>
+              <Text style={styles.settingValue}>
+                {isPremium ? 'Premium' : 'Free'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* About Section */}
         <View style={styles.section}>
@@ -273,6 +377,30 @@ const styles = StyleSheet.create({
   settingValue: {
     fontSize: 14,
     color: colors.text.secondary,
+  },
+  premiumBadge: {
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  premiumBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#000',
+    letterSpacing: 0.5,
+  },
+  upgradeBadge: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  upgradeBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: 'white',
+    letterSpacing: 0.5,
   },
   // Modal styles
   modalOverlay: {

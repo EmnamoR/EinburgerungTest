@@ -70,7 +70,7 @@ export const questions: Question[] = [
             }
         ],
         correctAnswer: 3,
-        category: 'society'
+        category: 'politics'
     },
     {
         id: '2',
@@ -208,7 +208,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 0,
-        "category": "society"
+        "category": "politics"
     },
     {
         "id": "4",
@@ -277,7 +277,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 2,
-        "category": "society"
+        "category": "politics"
     },
     {
         "id": "5",
@@ -898,7 +898,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 1,
-        "category": "society"
+        "category": "politics"
     },
     {
         "id": "14",
@@ -11414,7 +11414,7 @@ export const questions: Question[] = [
     {
         "id": "165",
         "question": {
-            "de": "Wie hieß der erste Bundeskanzler der Bundesrepublik Deutschland?",
+            "de": "Wie hießt der erste Bundeskanzler der Bundesrepublik Deutschland?",
             "en": "What was the name of the first Federal Chancellor of the Federal Republic of Germany?",
             "ar": "ما اسم أول مستشار اتحادي لجمهورية ألمانيا الاتحادية؟",
             "tr": "Almanya Federal Cumhuriyeti'nin ilk Federal Şansölyesinin adı neydi?",
@@ -12175,15 +12175,15 @@ export const questions: Question[] = [
     {
         "id": "176",
         "question": {
-            "de": "Zu welchem Militärbündnis gehörte die DDR?",
-            "en": "Which military alliance did the GDR belong to?",
-            "ar": "إلى أي تحالف عسكري انتمت جمهورية ألمانيا الديمقراطية؟",
-            "tr": "DDR hangi askeri ittifaka aitti?",
-            "uk": "До якого військового альянсу належала НДР?",
-            "ru": "К какому военному союзу принадлежала ГДР?",
-            "pl": "Do jakiego sojuszu wojskowego należała NRD?",
-            "fa": "آلمان شرقی به کدام اتحاد نظامی تعلق داشت؟"
-        },
+            "de": "Wie waren die Besatzungszonen Deutschlands nach 1945 verteilt??",
+            "en": "How were Germany's occupation zones distributed after 1945?",
+            "ar": "كيف كانت تقسيمات مناطق الاحتلال في ألمانيا بعد عام 1945؟",
+            "tr": "Almanya'nın işgal bölgeleri 1945 sonrası nasıl dağıtıldı?",
+            "uk": "Як були розподілені окупаційні зони Німеччини після 1945 року?",
+            "ru": "Как были распределены зоны оккупации Германии после 1945 года?",
+            "pl": "Jak podzielono strefy okupacyjne w Niemczech po 1945 roku?",
+            "fa": "مناطق اشغال آلمان چگونه پس از 1945 توزیع شد؟"
+        },        
         "image": require("../assets/images/176.png"),
         "answers": [
             {
@@ -13353,7 +13353,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 0,
-        "category": "geography"
+        "category": "history"
     },
     {
         "id": "193",
@@ -13700,7 +13700,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 0,
-        "category": "geography"
+        "category": "history"
     },
     {
         "id": "198",
@@ -13769,7 +13769,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 2,
-        "category": "geography"
+        "category": "history"
     },
     {
         "id": "199",
@@ -13907,7 +13907,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 2,
-        "category": "geography"
+        "category": "history"
     },
     {
         "id": "201",
@@ -13976,7 +13976,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 1,
-        "category": "geography"
+        "category": "history"
     },
     {
         "id": "202",
@@ -14252,7 +14252,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 0,
-        "category": "politics"
+        "category": "history"
     },
     {
         "id": "206",
@@ -14321,7 +14321,7 @@ export const questions: Question[] = [
             }
         ],
         "correctAnswer": 1,
-        "category": "society"
+        "category": "history"
     },
     {
         "id": "207",

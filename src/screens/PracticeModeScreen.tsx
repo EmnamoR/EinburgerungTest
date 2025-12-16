@@ -1,4 +1,3 @@
-
 // src/screens/PracticeModeScreen.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Modal, ScrollView, Image, ActivityIndicator } from 'react-native';
@@ -28,6 +27,35 @@ const languages = [
   { code: 'ru', name: 'Русский' },
   { code: 'pl', name: 'Polski' },
   { code: 'fa', name: 'فارسی' },
+];
+
+// Category definitions (same as HomeScreen)
+const categories = [
+  {
+    id: 'politics',
+    title: 'Politics & Government',
+    filter: (q: any) => q.category === 'politics'
+  },
+  {
+    id: 'history',
+    title: 'German History',
+    filter: (q: any) => q.category === 'history'
+  },
+  {
+    id: 'society',
+    title: 'Society & Culture',
+    filter: (q: any) => q.category === 'society' || q.category === 'culture'
+  },
+  {
+    id: 'holocaust',
+    title: 'Holocaust & WWII',
+    filter: (q: any) => q.category === 'holocaust' ||
+      (q.category === 'history' &&
+        (q.question?.de?.toLowerCase().includes('holocaust') ||
+          q.question?.de?.toLowerCase().includes('nationalsozial') ||
+          q.question?.de?.toLowerCase().includes('hitler') ||
+          q.question?.de?.toLowerCase().includes('judenverfolgung')))
+  }
 ];
 
 // Image handling component
@@ -77,10 +105,11 @@ const PracticeModeScreen = () => {
   const route = useRoute<PracticeModeRouteProp>();
   const { selectedLanguage, setLanguage } = useLanguage();
   const { bookmarkedQuestions, toggleBookmark, isBookmarked } = useBookmarks();
-  const { updateQuestionProgress } = useProgress();
+  const { updateQuestionProgress, clearAllProgress } = useProgress();
 
   // Get parameters from route
   const bundeslandId = route.params?.bundesland;
+  const categoryId = route.params?.category;
   const questionId = route.params?.questionId;
 
   // Get selected state info
@@ -107,50 +136,63 @@ const PracticeModeScreen = () => {
     });
   };
 
-  // Filter questions based on Bundesland
+  // Filter questions based on parameters
   const getFilteredQuestions = () => {
     // First, remove duplicates
     const uniqueQuestions = getUniqueQuestions(originalQuestions);
     console.log(`Cleaned ${originalQuestions.length} questions down to ${uniqueQuestions.length} unique`);
 
-    if (bundeslandId) {
+    let filteredQuestions = uniqueQuestions;
+
+    // Filter by category if specified
+    if (categoryId) {
+      console.log(`Filtering questions for category: ${categoryId}`);
+      const categoryDef = categories.find(c => c.id === categoryId);
+      if (categoryDef) {
+        filteredQuestions = filteredQuestions.filter(categoryDef.filter);
+        console.log(`Found ${filteredQuestions.length} questions for category ${categoryId}`);
+      }
+    }
+    // Filter by Bundesland if specified
+    else if (bundeslandId) {
       // Show only questions for the selected Bundesland
       console.log(`Filtering questions for bundesland: ${bundeslandId}`);
-      const filtered = uniqueQuestions.filter(q => q.federalState === bundeslandId);
-      console.log(`Found ${filtered.length} questions for ${bundeslandId}`);
-      return filtered;
+      filteredQuestions = filteredQuestions.filter(q => q.federalState === bundeslandId);
+      console.log(`Found ${filteredQuestions.length} questions for ${bundeslandId}`);
+    }
+    // Show only general questions (no federalState) for main practice
+    else {
+      console.log('Filtering general questions (no federalState)');
+      filteredQuestions = filteredQuestions.filter(q => !q.federalState);
+      console.log(`Found ${filteredQuestions.length} general questions`);
     }
 
-    // Show only general questions (no federalState) for main practice
-    console.log('Filtering general questions (no federalState)');
-    const generalQuestions = uniqueQuestions.filter(q => !q.federalState);
-    console.log(`Found ${generalQuestions.length} general questions`);
-    return generalQuestions;
+    return filteredQuestions;
   };
 
   useEffect(() => {
     const filteredQuestions = getFilteredQuestions();
     setQuestions(filteredQuestions);
-  }, [bundeslandId]);
+  }, [bundeslandId, categoryId]);
 
   useEffect(() => {
     loadAnsweredQuestions();
-  }, [bundeslandId]);
+  }, [bundeslandId, categoryId]);
 
   useEffect(() => {
     saveAnsweredQuestions();
   }, [answeredQuestions]);
 
-  // Update questions when bundesland changes
+  // Update questions when parameters change
   useEffect(() => {
     const filteredQuestions = getFilteredQuestions();
     setQuestions(filteredQuestions);
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
     setShowAnswer(false);
-    // Reset answered questions for new bundesland
+    // Reset answered questions for new filter
     setAnsweredQuestions({});
-  }, [bundeslandId]);
+  }, [bundeslandId, categoryId]);
 
   useEffect(() => {
     if (questionId && questions.length > 0) {
@@ -163,8 +205,14 @@ const PracticeModeScreen = () => {
 
   const loadAnsweredQuestions = async () => {
     try {
-      // Use different storage key for each bundesland
-      const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+      // Use different storage key for each mode
+      let storageKey = 'answeredQuestions';
+      if (bundeslandId) {
+        storageKey = `answeredQuestions_${bundeslandId}`;
+      } else if (categoryId) {
+        storageKey = `answeredQuestions_${categoryId}`;
+      }
+
       const savedAnswers = await AsyncStorage.getItem(storageKey);
       if (savedAnswers) {
         setAnsweredQuestions(JSON.parse(savedAnswers));
@@ -179,11 +227,28 @@ const PracticeModeScreen = () => {
 
   const saveAnsweredQuestions = async () => {
     try {
-      const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+      let storageKey = 'answeredQuestions';
+      if (bundeslandId) {
+        storageKey = `answeredQuestions_${bundeslandId}`;
+      } else if (categoryId) {
+        storageKey = `answeredQuestions_${categoryId}`;
+      }
+
       await AsyncStorage.setItem(storageKey, JSON.stringify(answeredQuestions));
     } catch (error) {
       console.log('Error saving answered questions:', error);
     }
+  };
+
+  const getHeaderTitle = () => {
+    if (categoryId) {
+      const categoryDef = categories.find(c => c.id === categoryId);
+      return categoryDef ? `${categoryDef.title} (${questions.length})` : `Category (${questions.length})`;
+    }
+    if (selectedState) {
+      return `${selectedState.name} (${questions.length})`;
+    }
+    return 'Practice Mode';
   };
 
   // Handle case when no questions are available
@@ -199,7 +264,7 @@ const PracticeModeScreen = () => {
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
-            {selectedState ? `${selectedState.name} Questions` : 'Practice Mode'}
+            {getHeaderTitle()}
           </Text>
           <View style={styles.headerRight} />
         </View>
@@ -209,7 +274,9 @@ const PracticeModeScreen = () => {
           <Text style={styles.emptySubtitle}>
             {selectedState
               ? `No questions found for ${selectedState.name}. This Bundesland may not have specific questions yet.`
-              : 'No questions available for practice'}
+              : categoryId
+                ? 'No questions found for this category.'
+                : 'No questions available for practice'}
           </Text>
           <TouchableOpacity
             style={styles.primaryButton}
@@ -257,8 +324,8 @@ const PracticeModeScreen = () => {
     const isCorrect = currentQuestion.correctAnswer === answerId;
 
     try {
-      // Only update main progress context for general questions (no federalState)
-      if (!answeredQuestions[currentQuestion.id] && !bundeslandId) {
+      // Only update main progress context for general questions (no federalState and no category)
+      if (!answeredQuestions[currentQuestion.id] && !bundeslandId && !categoryId) {
         // This is a general question, update main progress
         await updateQuestionProgress(currentQuestion.id, isCorrect);
       }
@@ -270,12 +337,19 @@ const PracticeModeScreen = () => {
         [currentQuestion.id]: answerId
       }));
 
-      // Save to AsyncStorage with bundesland-specific key
+      // Save to AsyncStorage with appropriate key
       const updatedAnswers = {
         ...answeredQuestions,
         [currentQuestion.id]: answerId,
       };
-      const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+
+      let storageKey = 'answeredQuestions';
+      if (bundeslandId) {
+        storageKey = `answeredQuestions_${bundeslandId}`;
+      } else if (categoryId) {
+        storageKey = `answeredQuestions_${categoryId}`;
+      }
+
       await AsyncStorage.setItem(storageKey, JSON.stringify(updatedAnswers));
     } catch (error) {
       console.error('Error updating progress:', error);
@@ -349,12 +423,32 @@ const PracticeModeScreen = () => {
     toggleBookmark(currentQuestion.id);
   };
 
-  const handleResetProgress = () => {
-    setAnsweredQuestions({});
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
-    AsyncStorage.removeItem(storageKey);
+  const handleResetProgress = async () => {
+    try {
+      // Clear local state
+      setAnsweredQuestions({});
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+
+      // Clear the local storage for this specific practice session
+      let storageKey = 'answeredQuestions';
+      if (bundeslandId) {
+        storageKey = `answeredQuestions_${bundeslandId}`;
+      } else if (categoryId) {
+        storageKey = `answeredQuestions_${categoryId}`;
+      }
+
+      await AsyncStorage.removeItem(storageKey);
+
+      // If this is general practice (no bundesland and no category), also clear main progress
+      if (!bundeslandId && !categoryId) {
+        await clearAllProgress();
+      }
+
+      console.log('Progress reset successfully');
+    } catch (error) {
+      console.error('Error resetting progress:', error);
+    }
   };
 
   const handleShuffleQuestions = () => {
@@ -363,7 +457,15 @@ const PracticeModeScreen = () => {
     setCurrentQuestionIndex(0);
     setAnsweredQuestions({});
     setSelectedAnswer(null);
-    const storageKey = bundeslandId ? `answeredQuestions_${bundeslandId}` : 'answeredQuestions';
+
+    // Clear storage for this mode
+    let storageKey = 'answeredQuestions';
+    if (bundeslandId) {
+      storageKey = `answeredQuestions_${bundeslandId}`;
+    } else if (categoryId) {
+      storageKey = `answeredQuestions_${categoryId}`;
+    }
+
     AsyncStorage.removeItem(storageKey);
   };
 
@@ -380,7 +482,7 @@ const PracticeModeScreen = () => {
             <Text style={styles.backText}>Home</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
-            {selectedState ? `${selectedState.name} (${questions.length})` : 'Practice Mode'}
+            {getHeaderTitle()}
           </Text>
           <View style={styles.headerRight} />
         </View>
@@ -424,10 +526,10 @@ const PracticeModeScreen = () => {
                       onPress={handleBookmarkToggle}
                       style={styles.headerButton}
                     >
-                      <Ionicons
-                        name={currentQuestion && isBookmarked(currentQuestion.id) ? "bookmark" : "bookmark-outline"}
+                      <Feather
+                        name={currentQuestion && isBookmarked(currentQuestion.id) ? "bookmark" : "bookmark"}
                         size={24}
-                        color={colors.accent}
+                        color={currentQuestion && isBookmarked(currentQuestion.id) ? colors.accent : colors.text.secondary}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -635,29 +737,22 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     fontWeight: '500',
   },
+  languageSelectorContainer: {
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
   languageSelector: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
-  // languageSelector: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   gap: 6,
-  //   paddingHorizontal: 12,
-  //   paddingVertical: 6,
-  //   backgroundColor: colors.background,
-  //   borderRadius: 6,
-  //   borderWidth: 1,
-  //   borderColor: colors.border,
-  //   alignSelf: 'center',
-  // },
+  translationLabel: {
+    fontSize: 12,
+    color: colors.text.secondary,
+  },
   languageText: {
     fontSize: 12,
     color: colors.accent,
@@ -769,22 +864,6 @@ const styles = StyleSheet.create({
   },
   selectedAnswerText: {
     fontWeight: '500',
-  },
-  answerTranslationContainer: {
-    marginTop: 4,
-  },
-  answerTranslationLabel: {
-    fontSize: 10,
-    color: colors.text.secondary,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    marginBottom: 2,
-  },
-  answerTranslationText: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    fontStyle: 'italic',
-    lineHeight: 16,
   },
   nextButton: {
     flexDirection: 'row',
