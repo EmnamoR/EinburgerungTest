@@ -34,7 +34,7 @@ class PurchaseService {
     try {
       const { customerInfo } = await Purchases.purchasePackage(packageToPurchase);
       
-      if (customerInfo.entitlements.active['premium']) {
+      if (customerInfo.entitlements.active['Premium Access']) {
         await AsyncStorage.setItem('isPremium', 'true');
         return { success: true, customerInfo };
       } else {
@@ -52,7 +52,7 @@ class PurchaseService {
   static async restorePurchases() {
     try {
       const customerInfo = await Purchases.restorePurchases();
-      const isPremium = customerInfo.entitlements.active['premium'] !== undefined;
+      const isPremium = customerInfo.entitlements.active['Premium Access'] !== undefined;
       
       await AsyncStorage.setItem('isPremium', isPremium.toString());
       return { success: true, isPremium };

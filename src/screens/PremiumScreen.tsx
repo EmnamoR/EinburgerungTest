@@ -55,26 +55,26 @@ const PremiumScreen = () => {
     setPurchasing(false);
   };
 
-  // const handleRestore = async () => {
-  //   setPurchasing(true);
-  //   const result = await PurchaseService.restorePurchases();
+  const handleRestore = async () => {
+    setPurchasing(true);
+    const result = await PurchaseService.restorePurchases();
     
-  //   if (result.success) {
-  //     if (result.isPremium) {
-  //       Alert.alert(
-  //         'Restored!',
-  //         'Your premium subscription has been restored.',
-  //         [{ text: 'OK', onPress: () => navigation.goBack() }]
-  //       );
-  //     } else {
-  //       Alert.alert('No Purchases Found', 'No previous purchases found to restore.');
-  //     }
-  //   } else {
-  //     Alert.alert('Restore Failed', result.error || 'Could not restore purchases');
-  //   }
+    if (result.success) {
+      if (result.isPremium) {
+        Alert.alert(
+          'Restored!',
+          'Your premium subscription has been restored.',
+          [{ text: 'OK', onPress: () => navigation.goBack() }]
+        );
+      } else {
+        Alert.alert('No Purchases Found', 'No previous purchases found to restore.');
+      }
+    } else {
+      Alert.alert('Restore Failed', result.error || 'Could not restore purchases');
+    }
     
-  //   setPurchasing(false);
-  // };
+    setPurchasing(false);
+  };
 
   const handleRedeemCoupon = async () => {
     if (!couponCode.trim()) {
